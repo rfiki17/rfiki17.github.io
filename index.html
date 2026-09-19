@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rifki Hidayatullah | Software Test Engineer, IT GRC</title>
+<meta name="description" content="Portfolio of Rifki Hidayatullah. Software test engineer at ASYST and MTI student at Fasilkom UI, focused on IT governance, risk, and compliance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FDFDFD;
+  --fg: #0A0909;
+  --muted: #707070;
+  --rule: #E2DEDB;
+  --accent: #5E3A30;
+  --font: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0909; --fg: #FDFDFD; --muted: #9A9694; --rule: #262220; --accent: #CEB3A6;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0909; --fg: #FDFDFD; --muted: #9A9694; --rule: #262220; --accent: #CEB3A6;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+html[data-lang="en"] .l-id { display: none !important; }
+html[data-lang="id"] .l-en { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 0.95rem; }
+.top .brand { text-decoration: none; font-weight: 600; }
+.top nav { display: none; gap: 26px; }
+.top nav a { text-decoration: none; color: var(--muted); transition: color 200ms; }
+.top nav a:hover { color: var(--fg); }
+.tools { display: flex; gap: 8px; }
+.chip {
+  font: inherit; font-size: 0.85rem; color: var(--muted); background: none;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 5px 13px; cursor: pointer;
+  transition: color 200ms, border-color 200ms;
+}
+.chip:hover { color: var(--fg); border-color: var(--fg); }
+
+/* hero */
+.hero { padding: 48px 0 96px; }
+.avail { font-size: 0.95rem; color: var(--muted); margin: 0 0 32px; }
+.name {
+  margin: 0; font-weight: 700; font-stretch: 82%;
+  font-size: clamp(2.9rem, 13.5vw, 11rem); line-height: 0.92; letter-spacing: -0.04em;
+}
+.name .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.name .line > span { display: block; }
+html.js .name .line > span { transform: translateY(105%); }
+html.js.loaded .name .line > span { transform: translateY(0); transition: transform 900ms cubic-bezier(.16,1,.3,1); }
+html.js.loaded .name .line:nth-child(2) > span { transition-delay: 110ms; }
+
+.typed {
+  margin: 28px 0 0; font-size: clamp(1.3rem, 2.7vw, 2rem); line-height: 1.25; font-weight: 500;
+  font-stretch: 94%; letter-spacing: -0.015em; max-width: 24em; min-height: 2.5em;
+}
+.caret {
+  display: inline-block; width: 2px; height: 1em; background: var(--accent);
+  vertical-align: -0.12em; margin-left: 3px; animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-row { display: grid; gap: 28px; margin-top: 40px; grid-template-columns: 1fr; }
+.intro { margin: 0 0 20px; color: var(--muted); max-width: 48ch; }
+.link {
+  display: inline-block; text-decoration: none; font-weight: 500;
+  border-bottom: 1px solid var(--fg); padding-bottom: 3px; transition: color 200ms, border-color 200ms;
+}
+.link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* sections */
+section.s { border-top: 1px solid var(--rule); padding: 72px 0 80px; }
+.s h2 {
+  margin: 0 0 40px; font-weight: 700; font-stretch: 86%;
+  font-size: clamp(2rem, 5.5vw, 3.6rem); line-height: 1; letter-spacing: -0.035em;
+}
+.statement {
+  margin: 0 0 36px; font-size: clamp(1.25rem, 2.6vw, 1.9rem); line-height: 1.25; font-weight: 500;
+  font-stretch: 94%; letter-spacing: -0.015em; max-width: 26em;
+}
+.cols { display: grid; gap: 22px; grid-template-columns: 1fr; }
+.cols p { margin: 0; color: var(--muted); max-width: 52ch; }
+.cols strong { color: var(--fg); font-weight: 600; }
+
+/* list blocks */
+.item { padding: 28px 0; border-top: 1px solid var(--rule); display: grid; gap: 8px; grid-template-columns: 1fr; }
+.list .item:last-child { border-bottom: 1px solid var(--rule); }
+.meta { color: var(--muted); font-size: 0.95rem; }
+.item h3 { margin: 0 0 8px; font-size: 1.25rem; line-height: 1.25; font-weight: 600; font-stretch: 94%; letter-spacing: -0.015em; }
+.item p { margin: 0 0 8px; color: var(--muted); max-width: 62ch; }
+.item p:last-child { margin-bottom: 0; }
+.item ul { margin: 6px 0 0; padding-left: 1.05em; color: var(--muted); max-width: 62ch; }
+.item li { margin-bottom: 4px; }
+.stack { color: var(--accent); font-size: 0.92rem; font-weight: 500; }
+
+/* three columns */
+.trio { display: grid; gap: 0; grid-template-columns: 1fr; }
+.trio > div { padding: 26px 0; border-top: 1px solid var(--rule); }
+.trio h3 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 600; font-stretch: 94%; }
+.trio p { margin: 0; color: var(--muted); max-width: 42ch; }
+.trio .stack { margin-top: 10px; }
+
+/* contact */
+.contact-list { list-style: none; padding: 0; margin: 0; max-width: 480px; }
+.contact-list li { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-top: 1px solid var(--rule); }
+.contact-list li:last-child { border-bottom: 1px solid var(--rule); }
+.contact-list span { color: var(--muted); }
+.contact-list a { text-decoration: none; font-weight: 500; transition: color 200ms; }
+.contact-list a:hover { color: var(--accent); }
+.contact-list .val { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.copy {
+  font: inherit; font-size: 0.78rem; color: var(--muted); background: none;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; cursor: pointer;
+  transition: color 200ms, border-color 200ms;
+}
+.copy:hover { color: var(--fg); border-color: var(--fg); }
+
+footer { padding: 24px 0 48px; color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+html.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 600ms ease, transform 600ms cubic-bezier(.16,1,.3,1); }
+html.js .reveal.in { opacity: 1; transform: none; }
+
+@media (min-width: 640px) {
+  .item { grid-template-columns: 200px 1fr; gap: 32px; }
+  .trio { grid-template-columns: 1fr 1fr; gap: 0 36px; }
+}
+@media (min-width: 900px) {
+  .top nav { display: flex; }
+  .hero-row { grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: end; }
+  .cols { grid-template-columns: 1fr 1fr; gap: 48px; }
+  .trio { grid-template-columns: repeat(3, 1fr); gap: 0 40px; }
+  .item { grid-template-columns: 240px 1fr; gap: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  html.js .name .line > span, html.js .reveal { transform: none !important; opacity: 1 !important; transition: none !important; }
+  .caret { animation: none; }
+}
+</style>
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="#top">Rifki Hidayatullah</a>
+    <nav aria-label="Main">
+      <a href="#work"><span class="l-en">Work</span><span class="l-id">Proyek</span></a>
+      <a href="#about"><span class="l-en">About</span><span class="l-id">Tentang</span></a>
+      <a href="#experience"><span class="l-en">Experience</span><span class="l-id">Pengalaman</span></a>
+      <a href="#contact"><span class="l-en">Contact</span><span class="l-id">Kontak</span></a>
+    </nav>
+    <div class="tools">
+      <button class="chip" id="langBtn" type="button" aria-label="Switch language"><span class="l-en">ID</span><span class="l-id">EN</span></button>
+      <button class="chip" id="themeBtn" type="button" aria-label="Toggle theme"><span class="l-en">Theme</span><span class="l-id">Tema</span></button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="name">
+      <p class="avail">
+        <span class="l-en">Open to opportunities in IT GRC, IT audit, and QA</span>
+        <span class="l-id">Terbuka untuk peluang di IT GRC, IT audit, dan QA</span>
+      </p>
+      <h1 class="name" id="name">
+        <span class="line"><span>Rifki</span></span>
+        <span class="line"><span>Hidayatullah</span></span>
+      </h1>
+
+      <p class="typed" aria-hidden="true"><span id="typedText"></span><span class="caret"></span></p>
+      <p class="sr">
+        <span class="l-en">Software test engineer moving into IT governance, risk, and compliance.</span>
+        <span class="l-id">Software test engineer yang beralih ke tata kelola, risiko, dan kepatuhan TI.</span>
+      </p>
+
+      <div class="hero-row">
+        <p class="intro">
+          <span class="l-en">I test airline and enterprise systems at ASYST, a Garuda Indonesia Group company, while completing a Master of Information Technology at Fasilkom UI.</span>
+          <span class="l-id">Saya menguji sistem penerbangan dan enterprise di ASYST, bagian dari Garuda Indonesia Group, sambil menyelesaikan Magister Teknologi Informasi di Fasilkom UI.</span>
+        </p>
+        <div>
+          <a class="link" href="#work"><span class="l-en">See selected work</span><span class="l-id">Lihat proyek pilihan</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="about">
+      <h2 class="reveal"><span class="l-en">About</span><span class="l-id">Tentang</span></h2>
+      <p class="statement reveal">
+        <span class="l-en">I write test criteria that can be proven, record findings with evidence, and close gaps before release. I want to do the same work at the level of controls and risk.</span>
+        <span class="l-id">Saya menulis kriteria uji yang bisa dibuktikan, mencatat temuan dengan bukti, dan menutup celah sebelum rilis. Saya ingin melakukan hal yang sama pada level kontrol dan risiko.</span>
+      </p>
+      <div class="cols reveal">
+        <p>
+          <span class="l-en">My background is in <strong>Information Systems</strong> at Universitas Multimedia Nusantara. My undergraduate thesis applied COBIT 2019 to IT asset management governance, and my interest in IT governance has stayed consistent from undergraduate to graduate study.</span>
+          <span class="l-id">Latar belakang saya adalah <strong>Sistem Informasi</strong> di Universitas Multimedia Nusantara. Skripsi saya menerapkan COBIT 2019 pada tata kelola manajemen aset TI, dan minat saya pada IT governance konsisten dari S1 sampai S2.</span>
+        </p>
+        <p>
+          <span class="l-en">At Fasilkom UI I major in Information Technology with a GRC minor, focused on <strong>AI risk and compliance</strong>. I plan to graduate in January 2027, and CISA is my next certification target.</span>
+          <span class="l-id">Di Fasilkom UI saya mengambil jurusan Teknologi Informasi dengan peminatan GRC, berfokus pada <strong>risiko dan kepatuhan AI</strong>. Saya menargetkan lulus Januari 2027, dan CISA adalah target sertifikasi berikutnya.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="s" id="do">
+      <h2 class="reveal"><span class="l-en">What I do</span><span class="l-id">Bidang kerja</span></h2>
+      <div class="trio reveal">
+        <div>
+          <h3><span class="l-en">Software testing</span><span class="l-id">Pengujian perangkat lunak</span></h3>
+          <p>
+            <span class="l-en">Release testing for OTA integrations, a loyalty system, B2B booking platforms, and a healthcare ERP.</span>
+            <span class="l-id">Pengujian rilis untuk integrasi OTA, sistem loyalty, platform B2B booking, dan ERP kesehatan.</span>
+          </p>
+          <p class="stack">Playwright, Postman, JMeter, Jira</p>
+        </div>
+        <div>
+          <h3><span class="l-en">Governance and risk</span><span class="l-id">Tata kelola dan risiko</span></h3>
+          <p>
+            <span class="l-en">Framework-based assessment for information security and project management maturity.</span>
+            <span class="l-id">Asesmen berbasis kerangka kerja untuk keamanan informasi dan kematangan manajemen proyek.</span>
+          </p>
+          <p class="stack">COBIT 2019, ISO 27001, 27005, NIST CSF, PMMM</p>
+        </div>
+        <div>
+          <h3><span class="l-en">AI risk management</span><span class="l-id">Manajemen risiko AI</span></h3>
+          <p>
+            <span class="l-en">Research on how ready a software development lifecycle is to manage risks from AI adoption.</span>
+            <span class="l-id">Riset tentang kesiapan siklus pengembangan perangkat lunak dalam mengelola risiko adopsi AI.</span>
+          </p>
+          <p class="stack">NIST AI RMF 1.0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="work">
+      <h2 class="reveal"><span class="l-en">Selected work</span><span class="l-id">Proyek pilihan</span></h2>
+      <div class="list reveal">
+
+        <article class="item">
+          <div class="meta"><span class="l-en">Thesis, in progress</span><span class="l-id">Tesis, berjalan</span></div>
+          <div>
+            <h3><span class="l-en">Project management maturity with PMMM</span><span class="l-id">Kematangan manajemen proyek dengan PMMM</span></h3>
+            <p>
+              <span class="l-en">Evaluating the maturity of IT project management at PT Aero Systems Indonesia with the PM Solutions Project Management Maturity Model, Edition 4.</span>
+              <span class="l-id">Mengevaluasi kematangan manajemen proyek TI di PT Aero Systems Indonesia dengan Project Management Maturity Model dari PM Solutions, Edisi 4.</span>
+            </p>
+            <p class="stack">PMMM, PM Solutions Edition 4</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="meta"><span class="l-en">Research article, unpublished</span><span class="l-id">Artikel riset, belum dipublikasikan</span></div>
+          <div>
+            <h3><span class="l-en">AI risk management readiness in the SDLC</span><span class="l-id">Kesiapan manajemen risiko AI pada SDLC</span></h3>
+            <p>
+              <span class="l-en">Assessing readiness at ASYST with NIST AI RMF 1.0 as the evaluation standard, supported by the NIST AI 600-1 Generative AI Profile and the AI RMF Playbook.</span>
+              <span class="l-id">Menilai kesiapan di ASYST dengan NIST AI RMF 1.0 sebagai standar evaluasi, didukung NIST AI 600-1 Generative AI Profile dan AI RMF Playbook.</span>
+            </p>
+            <p class="stack">NIST AI RMF 1.0, Govern, Map, Measure, Manage</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="meta"><span class="l-en">Work project, in progress</span><span class="l-id">Proyek kerja, berjalan</span></div>
+          <div>
+            <h3><span class="l-en">Playwright suite refactor with Page Object Model</span><span class="l-id">Refactor suite Playwright dengan Page Object Model</span></h3>
+            <p>
+              <span class="l-en">Restructuring the automation suite for the eproc, AMALA, and B2B applications. Issues addressed:</span>
+              <span class="l-id">Merestrukturisasi suite otomasi untuk aplikasi eproc, AMALA, dan B2B. Masalah yang ditangani:</span>
+            </p>
+            <ul>
+              <li><span class="l-en">Credentials stored directly in code</span><span class="l-id">Kredensial yang tertanam di kode</span></li>
+              <li><span class="l-en">Excessive fixed waits</span><span class="l-id">Fixed wait yang berlebihan</span></li>
+              <li><span class="l-en">Tests that depend on each other</span><span class="l-id">Test yang saling bergantung</span></li>
+              <li><span class="l-en">Missing assertions</span><span class="l-id">Assertion yang belum ada</span></li>
+            </ul>
+            <p class="stack" style="margin-top:10px">Playwright, Page Object Model, Python</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="meta"><span class="l-en">Graduate coursework</span><span class="l-id">Proyek mata kuliah</span></div>
+          <div>
+            <h3><span class="l-en">Framework assessments at Fasilkom UI</span><span class="l-id">Asesmen berbasis kerangka kerja di Fasilkom UI</span></h3>
+            <ul>
+              <li><span class="l-en">ISO 27005 information security risk assessment of a public sector information system</span><span class="l-id">Penilaian risiko keamanan informasi sebuah sistem informasi sektor publik berbasis ISO 27005</span></li>
+              <li><span class="l-en">ISO 27001 ISMS group project for a state-owned financing company</span><span class="l-id">Proyek kelompok ISMS ISO 27001 untuk sebuah perusahaan pembiayaan milik negara</span></li>
+              <li><span class="l-en">IEEE-format paper on IT strategic roles in Indonesian multifinance companies</span><span class="l-id">Makalah format IEEE tentang peran strategis TI di perusahaan multifinance Indonesia</span></li>
+            </ul>
+            <p class="stack" style="margin-top:10px">ISO 27001, ISO 27005, IT Strategic Impact Grid</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="s" id="experience">
+      <h2 class="reveal"><span class="l-en">Experience</span><span class="l-id">Pengalaman</span></h2>
+      <div class="list reveal">
+        <div class="item">
+          <div class="meta">PT Aero Systems Indonesia (ASYST)<br><span class="l-en">Garuda Indonesia Group</span><span class="l-id">Bagian dari Garuda Indonesia Group</span></div>
+          <div>
+            <h3>Software Test Engineer (QA)</h3>
+            <p>
+              <span class="l-en">Release Management and Quality Assurance, OPM 3 team. Systems I test before release:</span>
+              <span class="l-id">Release Management dan Quality Assurance, tim OPM 3. Sistem yang saya uji sebelum rilis:</span>
+            </p>
+            <ul>
+              <li><span class="l-en">OTA integrations with Traveloka and Tiket.com</span><span class="l-id">Integrasi OTA dengan Traveloka dan Tiket.com</span></li>
+              <li><span class="l-en">AMALA, the loyalty system</span><span class="l-id">AMALA, sistem loyalty</span></li>
+              <li><span class="l-en">B2B booking platforms</span><span class="l-id">Platform B2B booking</span></li>
+              <li><span class="l-en">eproc, the e-procurement application</span><span class="l-id">eproc, aplikasi e-procurement</span></li>
+              <li><span class="l-en">Simklinik, an Odoo-based healthcare ERP for Garuda Sentra Medika</span><span class="l-id">Simklinik, ERP kesehatan berbasis Odoo untuk Garuda Sentra Medika</span></li>
+            </ul>
+            <p class="stack" style="margin-top:10px">Playwright, Postman, JMeter, Jira</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="education">
+      <h2 class="reveal"><span class="l-en">Education</span><span class="l-id">Pendidikan</span></h2>
+      <div class="list reveal">
+        <div class="item">
+          <div class="meta">Fasilkom Universitas Indonesia<br><span class="l-en">Expected January 2027</span><span class="l-id">Target lulus Januari 2027</span></div>
+          <div>
+            <h3><span class="l-en">Master of Information Technology</span><span class="l-id">Magister Teknologi Informasi</span></h3>
+            <p>
+              <span class="l-en">GPA 3.64. Major in Information Technology, GRC minor with a focus on AI risk and compliance.</span>
+              <span class="l-id">IPK 3,64. Jurusan Teknologi Informasi, peminatan GRC dengan fokus risiko dan kepatuhan AI.</span>
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta">Universitas Multimedia Nusantara</div>
+          <div>
+            <h3><span class="l-en">Bachelor of Information Systems</span><span class="l-id">S1 Sistem Informasi</span></h3>
+            <p>
+              <span class="l-en">Thesis: COBIT 2019 applied to IT asset management governance.</span>
+              <span class="l-id">Skripsi: COBIT 2019 untuk tata kelola manajemen aset TI.</span>
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta"><span class="l-en">Training</span><span class="l-id">Pelatihan</span></div>
+          <div>
+            <h3><span class="l-en">Governance, audit, and security</span><span class="l-id">Tata kelola, audit, dan keamanan</span></h3>
+            <p>
+              <span class="l-en">COBIT 2019, risk-based IT audit, IS audit practices, and ISO 27001 through Taalenta Digital Inteleksia and Inixindo Jogja. CISA is my next target.</span>
+              <span class="l-id">COBIT 2019, IT audit berbasis risiko, praktik audit sistem informasi, dan ISO 27001 melalui Taalenta Digital Inteleksia dan Inixindo Jogja. CISA adalah target berikutnya.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="leadership">
+      <h2 class="reveal"><span class="l-en">Leadership</span><span class="l-id">Kepemimpinan</span></h2>
+      <div class="list reveal">
+        <div class="item">
+          <div class="meta">FORMA MTI, 2026</div>
+          <div>
+            <h3><span class="l-en">Head of Partnerships and External Relations</span><span class="l-id">Ketua Divisi Kemitraan dan Hubungan Luar</span></h3>
+            <p>
+              <span class="l-en">Arranged company visits to Google Indonesia (held August 2026), GoTo, and Microsoft Indonesia. Helped organize the June 8 inauguration and seminar with speakers from ILUNI UI and Garuda Indonesia.</span>
+              <span class="l-id">Mengatur kunjungan perusahaan ke Google Indonesia (terlaksana Agustus 2026), GoTo, dan Microsoft Indonesia. Ikut menyelenggarakan pelantikan dan seminar 8 Juni dengan pembicara dari ILUNI UI dan Garuda Indonesia.</span>
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta">Indonesia Digital Leadership Summit, 2026</div>
+          <div>
+            <h3><span class="l-en">Head of Event Division</span><span class="l-id">Ketua Divisi Acara</span></h3>
+            <p>
+              <span class="l-en">Created the event concept and session details, built the full rundown, and contacted keynote speakers.</span>
+              <span class="l-id">Menyusun konsep acara dan detail sesi, membuat rundown lengkap, serta menghubungi keynote speaker.</span>
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta">BRI GAMA IBCC, 2026</div>
+          <div>
+            <h3><span class="l-en">Team Leader, Team RAM</span><span class="l-id">Ketua Tim RAM</span></h3>
+            <p>
+              <span class="l-en">Led the team through the case rounds on BRI MSME financing and data frameworks, including a strategic analysis document.</span>
+              <span class="l-id">Memimpin tim melewati babak-babak kasus pembiayaan UMKM BRI dan kerangka data, termasuk menyusun dokumen analisis strategis.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="achievements">
+      <h2 class="reveal"><span class="l-en">Achievements</span><span class="l-id">Pencapaian</span></h2>
+      <div class="list reveal">
+        <div class="item">
+          <div class="meta">BRI GAMA IBCC, 2026</div>
+          <div>
+            <h3><span class="l-en">Grand Finalist, Top 10</span><span class="l-id">Grand Finalist, Top 10</span></h3>
+            <p>
+              <span class="l-en">Reached the top 10 of the BRI GAMA International Business Case Competition 2026 as leader of Team RAM, on a case about BRI MSME financing and data frameworks.</span>
+              <span class="l-id">Masuk 10 besar BRI GAMA International Business Case Competition 2026 sebagai ketua Tim RAM, pada kasus pembiayaan UMKM BRI dan kerangka data.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="contact">
+      <h2 class="reveal"><span class="l-en">Contact</span><span class="l-id">Kontak</span></h2>
+      <div class="reveal">
+        <p class="statement">
+          <span class="l-en">Open to roles in IT GRC, IT audit, and QA. Based in South Tangerang.</span>
+          <span class="l-id">Terbuka untuk peran di IT GRC, IT audit, dan QA. Berbasis di Tangerang Selatan.</span>
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span>Email</span>
+            <span class="val">
+              <a id="mailLink" href="mailto:rifkihidayatullah20@gmail.com">rifkihidayatullah20@gmail.com</a>
+              <button class="copy" id="copyMail" type="button"><span class="l-en">Copy</span><span class="l-id">Salin</span></button>
+            </span>
+          </li>
+          <li>
+            <span>WhatsApp</span>
+            <span class="val">
+              <a id="waLink" href="https://wa.me/6285817711143" rel="noopener" target="_blank">+62 858-1771-1143</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span><span class="l-en">Rifki Hidayatullah, South Tangerang</span><span class="l-id">Rifki Hidayatullah, Tangerang Selatan</span></span>
+    <span><span class="l-en">Updated September 2026</span><span class="l-id">Diperbarui September 2026</span></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  var PHRASES = {
+    en: [
+      "I test software. I assess risk. I improve controls.",
+      "Software quality with a GRC mindset.",
+      "From QA to IT governance, risk, and compliance.",
+      "Exploring AI risk and compliance.",
+      "Building reliable, governed digital systems."
+    ],
+    id: [
+      "Saya menguji software. Saya menilai risiko. Saya memperkuat kontrol.",
+      "Kualitas software dengan pola pikir GRC.",
+      "Dari QA menuju tata kelola, risiko, dan kepatuhan TI.",
+      "Mendalami risiko dan kepatuhan AI.",
+      "Membangun sistem digital yang andal dan terkelola."
+    ]
+  };
+
+  var MSG = {
+    en: {
+      subject: "Hello from your portfolio site",
+      body: "Hi Rifki,\n\nI came across your portfolio and would like to talk about\n\n",
+      wa: "Hi Rifki, I came across your portfolio and would like to talk about "
+    },
+    id: {
+      subject: "Halo, dari website portofolio Anda",
+      body: "Halo Rifki,\n\nSaya melihat portofolio Anda dan ingin berdiskusi tentang\n\n",
+      wa: "Halo Rifki, saya melihat portofolio Anda dan ingin berdiskusi tentang "
+    }
+  };
+
+  var EMAIL = "rifkihidayatullah20@gmail.com";
+  var WA_NUMBER = "6285817711143";
+
+  function setContactLinks(l) {
+    var m = MSG[l];
+    document.getElementById("mailLink").href =
+      "mailto:" + EMAIL + "?subject=" + encodeURIComponent(m.subject) + "&body=" + encodeURIComponent(m.body);
+    document.getElementById("waLink").href =
+      "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(m.wa);
+  }
+
+  var copyBtn = document.getElementById("copyMail");
+  copyBtn.addEventListener("click", function () {
+    var done = function () {
+      var old = copyBtn.innerHTML;
+      copyBtn.textContent = lang === "id" ? "Tersalin" : "Copied";
+      setTimeout(function () { copyBtn.innerHTML = old; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(EMAIL).then(done).catch(function () {});
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = EMAIL; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+
+  var stored = null;
+  try { stored = localStorage.getItem("lang"); } catch (e) {}
+  var lang = stored || ((navigator.language || "en").toLowerCase().indexOf("id") === 0 ? "id" : "en");
+
+  function setLang(l) {
+    lang = l;
+    root.setAttribute("data-lang", l);
+    root.setAttribute("lang", l);
+    try { localStorage.setItem("lang", l); } catch (e) {}
+    setContactLinks(l);
+    restartTyping();
+  }
+
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var cur = root.getAttribute("data-theme");
+    if (!cur) cur = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    root.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+  });
+  document.getElementById("langBtn").addEventListener("click", function () {
+    setLang(lang === "en" ? "id" : "en");
+  });
+
+  // typewriter
+  var out = document.getElementById("typedText");
+  var timer = null, idx = 0, pos = 0, deleting = false;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function restartTyping() {
+    clearTimeout(timer);
+    idx = 0; pos = 0; deleting = false;
+    if (reduce) { out.textContent = PHRASES[lang][0]; return; }
+    out.textContent = "";
+    timer = setTimeout(step, 400);
+  }
+
+  function step() {
+    var text = PHRASES[lang][idx];
+    if (!deleting) {
+      pos++;
+      out.textContent = text.slice(0, pos);
+      if (pos === text.length) { deleting = true; timer = setTimeout(step, 2200); return; }
+      timer = setTimeout(step, 45);
+    } else {
+      pos--;
+      out.textContent = text.slice(0, pos);
+      if (pos === 0) {
+        deleting = false;
+        idx = (idx + 1) % PHRASES[lang].length;
+        timer = setTimeout(step, 320);
+        return;
+      }
+      timer = setTimeout(step, 22);
+    }
+  }
+
+  setLang(lang);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { root.classList.add("loaded"); });
+  });
+
+  var els = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
+  } else {
+    els.forEach(function (el) { el.classList.add("in"); });
+  }
+})();
+</script>
+</body>
+</html>
