@@ -79,3 +79,11 @@ test('favicon and touch icon are served', async ({ request }, info) => {
   expect(touch.status()).toBe(200);
   expect(touch.headers()['content-type']).toContain('image/png');
 });
+
+test('Google Search Console verification file is served unchanged', async ({ request }, info) => {
+  once(info.project.name);
+  // Google re-checks this file. Removing it drops the Search Console verification.
+  const res = await request.get('/googlec319535b3240bed4.html');
+  expect(res.status()).toBe(200);
+  expect((await res.text()).trim()).toBe('google-site-verification: googlec319535b3240bed4.html');
+});
