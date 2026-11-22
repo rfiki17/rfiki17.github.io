@@ -9,11 +9,14 @@ interface Props {
   description: string;
   /** Pages that must not be indexed (404). Drops canonical, hreflang and social tags. */
   noindex?: boolean;
+  /** Paths of this page in each language. Default: the CV pages. */
+  enPath?: string;
+  idPath?: string;
 }
-const { lang, title, description, noindex = false } = Astro.props;
+const { lang, title, description, noindex = false, enPath = '/', idPath = '/id/' } = Astro.props;
 const site = Astro.site ?? new URL('https://rfiki17.github.io');
-const enUrl = new URL('/', site).href;
-const idUrl = new URL('/id/', site).href;
+const enUrl = new URL(enPath, site).href;
+const idUrl = new URL(idPath, site).href;
 const canonical = lang === 'en' ? enUrl : idUrl;
 const ogImage = new URL('/og.jpg', site).href;
 const ogAlt = lang === 'en'
@@ -31,7 +34,7 @@ const jsonLd = {
   email: `mailto:${profile.email}`,
   telephone: profile.phone,
   sameAs: [profile.linkedin],
-  url: canonical,
+  url: new URL(lang === 'en' ? '/' : '/id/', site).href,
   image: new URL('/img/portrait-1000.webp', site).href,
   alumniOf: [
     { '@type': 'CollegeOrUniversity', name: 'Universitas Indonesia' },

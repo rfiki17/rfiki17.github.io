@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CaseStudy from '../../../components/CaseStudy.astro';
+import { caseStudies, caseUi } from '../../../data/cases';
+
+export function getStaticPaths() {
+  return caseStudies.map((cs) => ({ params: { slug: cs.slug }, props: { cs } }));
+}
+const { cs } = Astro.props;
+const lang = 'id';
+---
+<Base
+  lang={lang}
+  title={`${cs.title[lang]} · Rifki Hidayatullah`}
+  description={cs.summary[lang]}
+  enPath={`/case-studies/${cs.slug}/`}
+  idPath={`/id/case-studies/${cs.slug}/`}
+>
+  <CaseStudy lang={lang} cs={cs} />
+</Base>

@@ -6,11 +6,11 @@ import QRCode from 'qrcode';
 import { type Lang } from '../data/cv';
 import { ui3 } from '../data/v2';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props { lang: Lang; path?: string }
+const { lang, path } = Astro.props;
 const t = (x: { en: string; id: string }) => x[lang];
 const site = Astro.site ?? new URL('https://rfiki17.github.io');
-const pageUrl = new URL(lang === 'en' ? '/' : '/id/', site).href;
+const pageUrl = new URL(path ?? (lang === 'en' ? '/' : '/id/'), site).href;
 const qrSvg = await QRCode.toString(pageUrl, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#0A0909', light: '#FFFFFF' } });
 
 // Brand-neutral glyphs drawn inline. Labels under each circle carry the meaning.
@@ -80,7 +80,7 @@ const targets = [
     function currentUrl() {
       var url = new URL(input.getAttribute('data-base'));
       var view = document.documentElement.getAttribute('data-view');
-      if (view && view !== 'all') url.searchParams.set('view', view);
+      if (view && view !== 'all' && document.querySelector('.views')) url.searchParams.set('view', view);
       return url.href;
     }
     function fill() {

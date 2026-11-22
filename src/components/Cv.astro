@@ -5,10 +5,11 @@ import {
 } from '../data/cv';
 import {
   availability, phrases, tagline, heroIntro, aboutStatement, aboutCols, whatIDo, research, leadership,
-  certHighlights, certGroups, certUi, contactStatement, messages, nav, ui2, rail, heroStats, views, ui3,
+  certHighlights, certGroups, certUi, contactStatement, messages, nav, ui2, rail, heroStats, views, ui3, availabilityCard, ui4,
 } from '../data/v2';
 import DownloadDialog from './DownloadDialog.astro';
 import ShareDialog from './ShareDialog.astro';
+import { caseStudies, caseUi } from '../data/cases';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -25,6 +26,8 @@ const nameParts = profile.name.split(' ');
 const featured = projectGroups.flatMap((g) => g.items.filter((p) => p.featured).map((p) => ({ ...p, domain: g.domain })));
 const restGroups = projectGroups.map((g) => ({ ...g, items: g.items.filter((p) => !p.featured) })).filter((g) => g.items.length);
 const restCount = restGroups.reduce((n, g) => n + g.items.length, 0);
+const caseFor = (name: string, client: { en: string }) => caseStudies.find((c) => c.project === name && c.projectClient === client.en);
+const caseBase = lang === 'en' ? '/case-studies/' : '/id/case-studies/';
 const shareIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>';
 // Build date for the footer, so "Updated" never goes stale.
 const updatedOn = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'id-ID', { month: 'long', year: 'numeric' }).format(new Date());
@@ -66,7 +69,7 @@ const stats = [
 
   <main id="main">
     <section class="hero" aria-labelledby="name">
-      <p class="avail">{t(availability)}</p>
+      <p class="avail"><a href="#availability"><span class="avail-dot" aria-hidden="true"></span>{t(availabilityCard.heroLine)}</a></p>
       <h1 class="name" id="name">
         <span class="line"><span>{nameParts[0]}</span></span>
         <span class="line"><span>{nameParts.slice(1).join(' ')}</span></span>
@@ -130,7 +133,7 @@ const stats = [
                 <div class="shots">
                   {a.photos.map((p) => (
                     <figure class="shot">
-                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener">
+                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener" data-lightbox="photos">
                         <img
                           src={`/img/${p.base}-800.webp`}
                           srcset={`/img/${p.base}-800.webp 800w, /img/${p.base}-1600.webp 1600w`}
@@ -180,16 +183,20 @@ const stats = [
       <h2 class="reveal" id="h-work">{t(ui2.work)}</h2>
       <p class="statement reveal">{t(ui.projectsIntro).replace('17', String(projectCount))}</p>
       <div class="list reveal featured">
-        {featured.map((p) => (
+        {featured.map((p) => {
+          const cs = caseFor(p.name, p.client);
+          return (
           <article class="item project">
             <div class="meta">{t(p.client)}<span class="domain">{t(p.domain)}</span>{p.ongoing && <span class="badge">{t(ui.ongoing)}</span>}</div>
             <div>
               <h3>{p.name}</h3>
               <p>{t(p.body)}</p>
               <p class="stack">{p.tags.join(', ')}</p>
+              {cs && <p><a class="link small case-link" href={`${caseBase}${cs.slug}/`}>{t(caseUi.read)} &rarr;</a></p>}
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
       <details class="more-projects">
         <summary class="chip tap">{t(ui3.moreProjects).replace('{n}', String(restCount))}</summary>
@@ -279,6 +286,18 @@ const stats = [
             <h3>{t(c.title)}</h3>
             <p class="event">{t(c.issuer)}</p>
             {c.detail && <p>{t(c.detail)}</p>}
+            {c.number && <p class="cert-no"><span>{t(ui4.certNo)}</span> {c.number}</p>}
+            {(c.verify || c.images) && (
+              <p class="cert-proof">
+                {c.verify && <a class="link small" href={c.verify} target="_blank" rel="noopener">{t(ui4.verify)}</a>}
+                {c.images && c.images.map((im, i) => (
+                  <a class="link small" href={`/img/${im.base}-1600.webp`} target="_blank" rel="noopener"
+                    data-lightbox={`cert-${c.images![0].base}`} data-alt={t(im.alt)} hidden={i > 0}>
+                    {c.images!.length > 1 ? t(ui4.viewCerts).replace('{n}', String(c.images!.length)) : t(ui4.viewCert)}
+                  </a>
+                ))}
+              </p>
+            )}
           </article>
         ))}
       </div>
@@ -346,6 +365,17 @@ const stats = [
       <h2 class="reveal" id="h-contact">{t(nav.contact)}</h2>
       <div class="reveal">
         <p class="statement">{t(contactStatement)}</p>
+        <section class="avail-card" id="availability" aria-labelledby="h-avail">
+          <div class="avail-head">
+            <h3 id="h-avail">{t(availabilityCard.title)}</h3>
+            <span class="avail-status"><span class="avail-dot" aria-hidden="true"></span>{t(availabilityCard.status)}</span>
+          </div>
+          <dl>
+            {availabilityCard.rows.map((r) => (
+              <div><dt>{t(r.label)}</dt><dd>{t(r.value)}</dd></div>
+            ))}
+          </dl>
+        </section>
         <ul class="contact-list">
           <li>
             <span>Email</span>
@@ -547,18 +577,27 @@ const stats = [
 
     // Photo viewer. Without JS the photo links still open the full image.
     var lb = document.getElementById('lightbox');
-    var shots = Array.prototype.slice.call(document.querySelectorAll('.shot a'));
+    // Links with data-lightbox open here. Links that share a data-lightbox value form one gallery.
+    var shots = Array.prototype.slice.call(document.querySelectorAll('a[data-lightbox]'));
     if (lb && shots.length && typeof lb.showModal === 'function') {
-      var lbImg = lb.querySelector('img'), lbCap = lb.querySelector('figcaption'), lbIdx = 0, lbOpener = null;
+      var lbImg = lb.querySelector('img'), lbCap = lb.querySelector('figcaption'), lbIdx = 0, lbOpener = null, group = shots;
+      var navBtns = lb.querySelectorAll('.lb-prev, .lb-next');
       var show = function (i) {
-        lbIdx = (i + shots.length) % shots.length;
-        var a = shots[lbIdx], thumb = a.querySelector('img');
+        lbIdx = (i + group.length) % group.length;
+        var a = group[lbIdx], thumb = a.querySelector('img');
+        var alt = a.getAttribute('data-alt') || (thumb ? thumb.alt : '');
         lbImg.src = a.getAttribute('href');
-        lbImg.alt = thumb ? thumb.alt : '';
-        lbCap.textContent = (thumb ? thumb.alt : '') + ' (' + (lbIdx + 1) + '/' + shots.length + ')';
+        lbImg.alt = alt;
+        lbCap.textContent = group.length > 1 ? alt + ' (' + (lbIdx + 1) + '/' + group.length + ')' : alt;
+        navBtns.forEach(function (b) { b.hidden = group.length < 2; });
       };
-      shots.forEach(function (a, i) {
-        a.addEventListener('click', function (e) { e.preventDefault(); lbOpener = a; show(i); lb.showModal(); });
+      shots.forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          e.preventDefault(); lbOpener = a;
+          var name = a.getAttribute('data-lightbox');
+          group = shots.filter(function (x) { return x.getAttribute('data-lightbox') === name; });
+          show(group.indexOf(a)); lb.showModal();
+        });
       });
       lb.querySelector('.lb-prev').addEventListener('click', function () { show(lbIdx - 1); });
       lb.querySelector('.lb-next').addEventListener('click', function () { show(lbIdx + 1); });

@@ -1,0 +1,75 @@
+---
+// One case study page. Same look as the CV: Archivo, ruled sections, warm accent.
+import { profile, type Lang } from '../data/cv';
+import { caseStudies, caseUi, type CaseStudyPage } from '../data/cases';
+import { ui3 } from '../data/v2';
+import ShareDialog from './ShareDialog.astro';
+
+interface Props { lang: Lang; cs: CaseStudyPage }
+const { lang, cs } = Astro.props;
+const t = (x: { en: string; id: string }) => x[lang];
+const home = lang === 'en' ? '/' : '/id/';
+const otherLang = lang === 'en' ? 'id' : 'en';
+const otherHref = lang === 'en' ? `/id/case-studies/${cs.slug}/` : `/case-studies/${cs.slug}/`;
+const others = caseStudies.filter((c) => c.slug !== cs.slug);
+const shareIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>';
+---
+<a class="skip" href="#main">{lang === 'en' ? 'Skip to content' : 'Lewati ke konten'}</a>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href={home}>{profile.name}</a>
+    <div class="tools">
+      <a class="chip tap" href={otherHref} hreflang={otherLang} lang={otherLang}>{otherLang.toUpperCase()}<span class="sr"> {lang === 'en' ? 'Baca dalam Bahasa Indonesia' : 'Read in English'}</span></a>
+      <button class="chip tap share-open share-top" type="button" aria-haspopup="dialog" aria-controls="share-dialog"><Fragment set:html={shareIcon} /><span class="share-lbl">{t(ui3.share)}</span></button>
+      <a class="chip tap" href={`${home}#work`}>&larr; {t(caseUi.back)}</a>
+    </div>
+  </header>
+
+  <main id="main" class="case">
+    <p class="avail">{t(caseUi.label)}</p>
+    <h1 class="case-title">{t(cs.title)}</h1>
+    <p class="statement case-summary">{t(cs.summary)}</p>
+
+    <dl class="case-facts">
+      {cs.facts.map((f) => <div><dt>{t(f.label)}</dt><dd>{t(f.value)}</dd></div>)}
+    </dl>
+
+    {cs.sections.map((s) => (
+      <section class="case-section">
+        <h2>{t(s.heading)}</h2>
+        <div>
+          {s.paras && s.paras.map((p) => <p>{t(p)}</p>)}
+          {s.bullets && <ul>{s.bullets.map((b) => <li>{t(b)}</li>)}</ul>}
+        </div>
+      </section>
+    ))}
+
+    <section class="case-section">
+      <h2>{t(caseUi.results)}</h2>
+      <dl class="stats case-results">
+        {cs.results.map((r) => <div class="stat"><dt>{r.value}</dt><dd>{t(r.label)}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="case-section">
+      <h2>{t(caseUi.stack)}</h2>
+      <p class="stack">{cs.stack.join(', ')}</p>
+    </section>
+
+    <p class="note">{t(caseUi.note)}</p>
+
+    {others.length > 0 && (
+      <nav class="case-next" aria-label={t(caseUi.other)}>
+        <span>{t(caseUi.other)}</span>
+        {others.map((o) => <a class="link" href={`${lang === 'en' ? '' : '/id'}/case-studies/${o.slug}/`}>{t(o.title)}</a>)}
+      </nav>
+    )}
+  </main>
+
+  <footer>
+    <span>{profile.name}</span>
+    <a class="link small" href={`${home}#contact`}>{lang === 'en' ? 'Contact' : 'Kontak'}</a>
+  </footer>
+</div>
+
+<ShareDialog lang={lang} path={lang === 'en' ? `/case-studies/${cs.slug}/` : `/id/case-studies/${cs.slug}/`} />

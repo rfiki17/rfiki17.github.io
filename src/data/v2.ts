@@ -124,7 +124,9 @@ export const leadership: { meta: T; title: T; body: T; links?: { href: string; l
 
 // Certificates, checked against the files in Documents\Asset Rifki\Sertifikat on 22 Nov 2026.
 // The certificate files themselves are not published (the TOEIC one shows ID number and date of birth).
-export type Cert = { date: T; title: T; issuer: T; detail?: T };
+export type CertImage = { base: string; w: number; h: number; alt: T };
+// number: the certificate number printed on it. verify: the issuer's own verification page.
+export type Cert = { date: T; title: T; issuer: T; detail?: T; number?: string; verify?: string; images?: CertImage[] };
 
 // Shown as highlights, newest first.
 export const certHighlights: Cert[] = [
@@ -133,24 +135,35 @@ export const certHighlights: Cert[] = [
     title: { en: 'Bootcamp: IT Auditing and GRC', id: 'Bootcamp: IT Auditing and GRC' },
     issuer: { en: 'Think Cloudly', id: 'Think Cloudly' },
     detail: { en: 'Certificate of participation, 5 CPE for 5 hours of training.', id: 'Sertifikat partisipasi, 5 CPE untuk 5 jam pelatihan.' },
+    number: 'TC-092026-03K13IS-42191',
+    verify: 'https://thinkcloudly.com/cert-verification/?cert=TC-092026-03K13IS-42191',
+    images: [{ base: 'cert-cloudly', w: 1600, h: 1131, alt: { en: 'Think Cloudly certificate of participation, Bootcamp on IT Auditing and GRC, 5 CPE', id: 'Sertifikat partisipasi Think Cloudly, Bootcamp IT Auditing and GRC, 5 CPE' } }],
   },
   {
     date: { en: 'Sep 2025', id: 'Sep 2025' },
     title: { en: 'Cybersecurity for Beginners: Privacy and Personal Data Protection', id: 'Cybersecurity for Beginners: Privacy and Personal Data Protection' },
     issuer: { en: 'Faculty of Computer Science, Universitas Indonesia, with KOICA and Pai Chai University', id: 'Fakultas Ilmu Komputer Universitas Indonesia, bersama KOICA dan Pai Chai University' },
     detail: { en: 'Certificate of completion. 6 modules, 30 hours, including Indonesian data protection regulation. Marks of 93 to 100 per module.', id: 'Sertifikat kelulusan. 6 modul, 30 jam, termasuk regulasi pelindungan data Indonesia. Nilai 93 sampai 100 per modul.' },
+    number: 'SERT-39-43/UN2.F11.D/PPM.01.01/2025',
+    images: [{ base: 'cert-pdp', w: 1600, h: 2263, alt: { en: 'Certificate of completion from the Faculty of Computer Science, Universitas Indonesia, with marks per module', id: 'Sertifikat kelulusan dari Fakultas Ilmu Komputer Universitas Indonesia, dengan nilai per modul' } }],
   },
   {
     date: { en: 'Dec 2024', id: 'Des 2024' },
     title: { en: 'Risk-Based Audit with CISA Competency, and COBIT 2019', id: 'Risk-Based Audit with CISA Competency, dan COBIT 2019' },
     issuer: { en: 'PT Taalenta Digital Inteleksia', id: 'PT Taalenta Digital Inteleksia' },
     detail: { en: 'Two four-session classes, 8 training hours each. The COBIT class covered cyber security through IT maturity improvement. CISA is my next certification target.', id: 'Dua kelas empat sesi, masing-masing 8 jam pelatihan. Kelas COBIT membahas keamanan siber melalui peningkatan kematangan TI. CISA adalah target sertifikasi saya berikutnya.' },
+    number: '48340/SRT-W/TLNT-O/XII/2024, 48347/SRT-W/TLNT-O/XII/2024',
+    images: [
+      { base: 'cert-cisa', w: 1600, h: 1132, alt: { en: 'Taalenta certificate, Risk-Based Audit with CISA Competency, 8 training hours', id: 'Sertifikat Taalenta, Risk-Based Audit with CISA Competency, 8 jam pelatihan' } },
+      { base: 'cert-cobit', w: 1600, h: 1132, alt: { en: 'Taalenta certificate, COBIT 2019: cyber security through IT maturity improvement, 8 training hours', id: 'Sertifikat Taalenta, COBIT 2019: keamanan siber melalui peningkatan kematangan TI, 8 jam pelatihan' } },
+    ],
   },
   {
     date: { en: 'Apr 2024', id: 'Apr 2024' },
     title: { en: 'TOEIC Listening and Reading: 875', id: 'TOEIC Listening and Reading: 875' },
     issuer: { en: 'ETS, via International Test Center', id: 'ETS, melalui International Test Center' },
     detail: { en: 'Listening 480, Reading 395 (out of 495 each).', id: 'Listening 480, Reading 395 (masing-masing dari 495).' },
+    images: [{ base: 'cert-toeic', w: 1600, h: 745, alt: { en: 'TOEIC Listening and Reading score certificate, total 875. Identification number and date of birth hidden.', id: 'Sertifikat skor TOEIC Listening and Reading, total 875. Nomor identifikasi dan tanggal lahir disamarkan.' } }],
   },
 ];
 
@@ -287,4 +300,25 @@ export const ui3 = {
   photo: { en: 'Photo', id: 'Foto' },
   prev: { en: 'Previous photo', id: 'Foto sebelumnya' },
   next: { en: 'Next photo', id: 'Foto berikutnya' },
+};
+
+// Availability card (Contact) and the short line in the hero. Confirmed by the owner on 22 Nov 2026.
+export const availabilityCard = {
+  title: { en: 'Availability', id: 'Ketersediaan' },
+  status: { en: 'Open to new roles', id: 'Terbuka untuk peran baru' },
+  rows: [
+    { label: { en: 'Roles', id: 'Peran' }, value: { en: 'IT GRC Analyst, IT Auditor, QA / Software Test Engineer, QA Automation / SDET', id: 'IT GRC Analyst, IT Auditor, QA / Software Test Engineer, QA Automation / SDET' } },
+    { label: { en: 'Work mode', id: 'Mode kerja' }, value: { en: 'Onsite in Greater Jakarta, hybrid or remote', id: 'Onsite di Jabodetabek, hybrid, atau remote' } },
+    { label: { en: 'Relocation', id: 'Relokasi' }, value: { en: 'Open to relocation', id: 'Terbuka untuk relokasi' } },
+    { label: { en: 'Notice period', id: 'Masa pemberitahuan' }, value: { en: '1 month', id: '1 bulan' } },
+    { label: { en: 'Based in', id: 'Domisili' }, value: { en: 'South Tangerang, Greater Jakarta', id: 'Tangerang Selatan, Jabodetabek' } },
+  ],
+  heroLine: { en: 'Open to IT GRC, IT audit and QA roles · onsite, hybrid or remote · 1 month notice', id: 'Terbuka untuk peran IT GRC, audit TI, dan QA · onsite, hybrid, atau remote · notice 1 bulan' },
+};
+
+export const ui4 = {
+  certNo: { en: 'Certificate no.', id: 'No. sertifikat' },
+  verify: { en: 'Verify with issuer', id: 'Verifikasi ke penerbit' },
+  viewCert: { en: 'View certificate', id: 'Lihat sertifikat' },
+  viewCerts: { en: 'View certificates ({n})', id: 'Lihat sertifikat ({n})' },
 };

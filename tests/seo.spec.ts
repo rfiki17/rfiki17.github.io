@@ -44,7 +44,8 @@ test('sitemap.xml lists both languages with hreflang alternates', async ({ reque
   const xml = await res.text();
   expect(xml).toContain('<loc>https://rfiki17.github.io/</loc>');
   expect(xml).toContain('<loc>https://rfiki17.github.io/id/</loc>');
-  expect(xml.match(/hreflang="id"/g)).toHaveLength(2);
+  expect(xml).toContain('<loc>https://rfiki17.github.io/case-studies/booking-middleware-regression/</loc>');
+  expect(xml.match(/<url>/g)).toHaveLength(6);
 });
 
 test('unknown paths show the 404 page with links back to the CV', async ({ page }) => {
