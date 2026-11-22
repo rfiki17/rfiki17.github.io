@@ -17,6 +17,7 @@ for (const path of ['/', '/id/']) {
     expect(await meta('meta[property="og:image:height"]')).toBe('630');
     expect(await meta('meta[property="og:image:alt"]')).toMatch(/Rifki Hidayatullah/);
     expect(await meta('meta[name="twitter:card"]')).toBe('summary_large_image');
+    expect(await meta('meta[name="author"]')).toBe('Rifki Hidayatullah');
     expect(await meta('meta[property="og:url"]')).toBe(`https://rfiki17.github.io${path}`);
     const res = await request.get('/og.jpg');
     expect(res.status()).toBe(200);
