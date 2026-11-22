@@ -259,3 +259,9 @@ html.js .to-top:not(.show) { opacity: 0; visibility: hidden; }
   section.s { padding: 18px 0; break-inside: auto; }
   .item { break-inside: avoid; padding: 10px 0; }
 }
+
+/* 404 page */
+.notfound { padding: 12vh 0 16vh; max-width: 40rem; }
+.nf-title { margin: 16px 0 20px; font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: 0.95; font-weight: 800; font-stretch: 80%; letter-spacing: -0.035em; }
+.nf-text { color: var(--muted); font-size: 1.1rem; margin: 0 0 8px; }
+.nf-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }

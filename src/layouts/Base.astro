@@ -7,12 +7,18 @@ interface Props {
   lang: Lang;
   title: string;
   description: string;
+  /** Pages that must not be indexed (404). Drops canonical, hreflang and social tags. */
+  noindex?: boolean;
 }
-const { lang, title, description } = Astro.props;
+const { lang, title, description, noindex = false } = Astro.props;
 const site = Astro.site ?? new URL('https://rfiki17.github.io');
 const enUrl = new URL('/', site).href;
 const idUrl = new URL('/id/', site).href;
 const canonical = lang === 'en' ? enUrl : idUrl;
+const ogImage = new URL('/og.jpg', site).href;
+const ogAlt = lang === 'en'
+  ? 'Rifki Hidayatullah, QA / Software Test Engineer and IT GRC, holding the BRI GAMA IBCC 2026 grand finalist medal'
+  : 'Rifki Hidayatullah, QA / Software Test Engineer dan IT GRC, memegang medali grand finalist BRI GAMA IBCC 2026';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -26,6 +32,11 @@ const jsonLd = {
   telephone: profile.phone,
   sameAs: [profile.linkedin],
   url: canonical,
+  image: new URL('/img/portrait-1000.webp', site).href,
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Universitas Indonesia' },
+    { '@type': 'CollegeOrUniversity', name: 'Universitas Multimedia Nusantara' },
+  ],
 };
 ---
 <!doctype html>
@@ -38,17 +49,39 @@ const jsonLd = {
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#FDFDFD" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0A0909" media="(prefers-color-scheme: dark)" />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="id" href={idUrl} />
-    <link rel="alternate" hreflang="x-default" href={enUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta property="og:type" content="profile" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'id_ID'} />
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <>
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="id" href={idUrl} />
+        <link rel="alternate" hreflang="x-default" href={enUrl} />
+        <link rel="sitemap" href="/sitemap.xml" />
+        <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="Rifki Hidayatullah" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'id_ID'} />
+        <meta property="og:locale:alternate" content={lang === 'en' ? 'id_ID' : 'en_US'} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={ogAlt} />
+        <meta property="profile:first_name" content="Rifki" />
+        <meta property="profile:last_name" content="Hidayatullah" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={ogAlt} />
+        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+      </>
+    )}
     <script is:inline>
       // Apply a saved theme before first paint. No saved choice means the OS setting decides.
       document.documentElement.classList.add('js');

@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
+import { PDFDocument } from 'pdf-lib';
 
 const MAX_PAGES = 2;
 const root = path.resolve('dist');
@@ -40,8 +41,24 @@ try {
     await page.evaluate(() => document.fonts.ready);
     const name = `Rifki-Hidayatullah-CV-${track.toUpperCase()}-${lang}.pdf`;
     const file = path.join(outDir, name);
-    await page.pdf({ path: file, preferCSSPageSize: true, printBackground: false, tagged: true, outline: false });
-    const pages = (fs.readFileSync(file, 'latin1').match(/\/Type\s*\/Page[^s]/g) ?? []).length;
+    const raw = await page.pdf({ preferCSSPageSize: true, printBackground: false, tagged: true, outline: false });
+    // Document properties read by ATS parsers and file managers. Saved without object streams so the
+    // page objects stay readable for the page count below and in tests/pdf.spec.ts.
+    const doc = await PDFDocument.load(raw, { updateMetadata: false });
+    const isId = lang === 'ID';
+    const trackName = track === 'qa'
+      ? 'QA / Software Test Engineer'
+      : (isId ? 'Tata Kelola, Risiko, dan Kepatuhan TI (GRC)' : 'IT Governance, Risk and Compliance (GRC)');
+    doc.setTitle(`Rifki Hidayatullah, CV ${trackName}`, { showInWindowTitleBar: true });
+    doc.setAuthor('Rifki Hidayatullah');
+    doc.setSubject(`Curriculum vitae, ${trackName}`);
+    doc.setKeywords(track === 'qa'
+      ? ['QA', 'Software Test Engineer', 'Playwright', 'API testing', 'Performance testing', 'Garuda Indonesia Group']
+      : ['IT GRC', 'IT audit', 'COBIT 2019', 'ISO/IEC 27001', 'ISO/IEC 27005', 'Risk management', 'ISACA']);
+    doc.setCreator('rfiki17.github.io');
+    doc.setLanguage(isId ? 'id-ID' : 'en-US');
+    fs.writeFileSync(file, await doc.save({ useObjectStreams: false }));
+    const pages = doc.getPageCount();
     const kb = Math.round(fs.statSync(file).size / 1024);
     console.log(`${name}: ${pages} page(s), ${kb} KB`);
     if (pages > MAX_PAGES) { console.error(`  over the ${MAX_PAGES}-page limit`); failed = true; }

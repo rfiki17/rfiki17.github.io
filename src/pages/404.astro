@@ -1,0 +1,21 @@
+---
+// GitHub Pages serves dist/404.html for every unknown path. Bilingual, not indexed.
+import Base from '../layouts/Base.astro';
+---
+<Base lang="en" title="Page not found · Rifki Hidayatullah" description="This page does not exist." noindex>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="/">Rifki Hidayatullah</a>
+    </header>
+    <main id="main" class="notfound">
+      <p class="avail">404</p>
+      <h1 class="nf-title">This page does not exist.</h1>
+      <p class="nf-text">The link may be old or mistyped. The CV is one page, in English and Indonesian.</p>
+      <p class="nf-text" lang="id">Halaman ini tidak ada. Tautannya mungkin lama atau salah ketik.</p>
+      <p class="nf-links">
+        <a class="chip tap" href="/">Go to the CV</a>
+        <a class="chip tap" href="/id/" lang="id">Buka CV (Bahasa Indonesia)</a>
+      </p>
+    </main>
+  </div>
+</Base>

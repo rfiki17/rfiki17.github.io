@@ -10,7 +10,7 @@ const root = path.resolve('dist');
 const types = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json',
   '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.pdf': 'application/pdf',
-  '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon',
+  '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml',
 };
 
 http.createServer((req, res) => {
@@ -19,7 +19,12 @@ http.createServer((req, res) => {
   let file = path.join(root, p);
   if (!file.startsWith(root)) { res.writeHead(403); return res.end(); }
   if (!fs.existsSync(file) && fs.existsSync(file + '/index.html')) file += '/index.html';
-  if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404, { 'content-type': 'text/html' }); return res.end('Not found'); }
+  // Like GitHub Pages: unknown paths get dist/404.html with status 404.
+  if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+    res.writeHead(404, { 'content-type': 'text/html; charset=utf-8' });
+    const nf = path.join(root, '404.html');
+    return fs.existsSync(nf) ? fs.createReadStream(nf).pipe(res) : res.end('Not found');
+  }
   res.writeHead(200, { 'content-type': types[path.extname(file)] ?? 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
 }).listen(port, '127.0.0.1', () => console.log(`serving dist on http://localhost:${port}`));

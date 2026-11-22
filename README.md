@@ -54,3 +54,10 @@ Playwright is pinned to 1.65.1. With 1.60 on Node 26, worker processes hung for 
 ## Deploy
 
 `.github/workflows/deploy.yml` runs the tests on every push and pull request and deploys to GitHub Pages from `main` only when they pass. In the repository settings, set Pages source to **GitHub Actions**.
+
+## Link preview, crawlers and 404
+
+- `public/og.jpg` (1200 x 630) is the image shown when the site is shared on LinkedIn, WhatsApp or email. It is rendered from the portrait and the site font by `node scripts/build-og.mjs`. Run it again after the portrait or the role changes.
+- `public/robots.txt` and `public/sitemap.xml` are static. Update `lastmod` in the sitemap after a larger content change.
+- `src/pages/404.astro` becomes `dist/404.html`, which GitHub Pages serves for unknown paths. It is not indexed.
+- The PDFs carry author, title, subject, keywords and language (set with pdf-lib in `scripts/build-pdf.mjs`).

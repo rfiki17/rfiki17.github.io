@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /cv/print/
+Disallow: /id/cv/print/
+
+Sitemap: https://rfiki17.github.io/sitemap.xml
