@@ -390,8 +390,8 @@ export const achievements: Achievement[] = [
     },
     date: { en: '5 Sep 2026', id: '5 Sep 2026' },
     detail: {
-      en: 'Reached the top 10 out of more than 60 graduate teams from around the world. As case and data lead in Team RAM (Universitas Indonesia), I co-designed a data integration and behavioural segmentation framework for BRI\'s MSME financing ecosystem and presented it at the Grand Final in Jakarta.',
-      id: 'Masuk 10 besar dari lebih dari 60 tim pascasarjana dari berbagai negara. Sebagai case and data lead di Tim RAM (Universitas Indonesia), saya ikut merancang framework integrasi data dan segmentasi perilaku untuk ekosistem pembiayaan UMKM BRI dan mempresentasikannya di Grand Final di Jakarta.',
+      en: 'Reached the top 10 out of more than 60 graduate teams from around the world. As Team Leader of Team RAM (Universitas Indonesia), I led the team that designed a data integration and behavioural segmentation framework for BRI\'s MSME financing ecosystem and presented it at the Grand Final in Jakarta.',
+      id: 'Masuk 10 besar dari lebih dari 60 tim pascasarjana dari berbagai negara. Sebagai Team Leader Tim RAM (Universitas Indonesia), saya memimpin tim merancang framework integrasi data dan segmentasi perilaku untuk ekosistem pembiayaan UMKM BRI dan mempresentasikannya di Grand Final di Jakarta.',
     },
     photos: [
       {
@@ -542,7 +542,7 @@ export const education: { school: string; degree: T; period: T; note?: T }[] = [
   {
     school: 'Universitas Indonesia',
     degree: { en: 'Master of Information Technology', id: 'Magister Teknologi Informasi' },
-    period: { en: 'Jan 2025 – Dec 2026 · GPA 3.64 / 4.00', id: 'Jan 2025 – Des 2026 · IPK 3,64 / 4,00' },
+    period: { en: 'Jan 2025 – Jan 2027 (expected) · GPA 3.64 / 4.00', id: 'Jan 2025 – Jan 2027 (perkiraan lulus) · IPK 3,64 / 4,00' },
     note: { en: 'In progress · focus on IT governance', id: 'Sedang berjalan · fokus tata kelola TI' },
   },
   {

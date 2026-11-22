@@ -96,8 +96,8 @@ export const printAchievements: { title: T; where: T; date: T }[] = [
   {
     title: { en: 'Top 10 Grand Finalist, Graduate Category', id: 'Top 10 Grand Finalist, Kategori Pascasarjana' },
     where: {
-      en: 'BRI GAMA International Business Case Competition 2026, out of 60+ teams worldwide',
-      id: 'BRI GAMA International Business Case Competition 2026, dari 60+ tim internasional',
+      en: 'BRI GAMA International Business Case Competition 2026, Team Leader of Team RAM, out of 60+ teams worldwide',
+      id: 'BRI GAMA International Business Case Competition 2026, Team Leader Tim RAM, dari 60+ tim internasional',
     },
     date: { en: 'Sep 2026', id: 'Sep 2026' },
   },
