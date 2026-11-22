@@ -70,7 +70,7 @@ const d = {
       </button>
     </div>
 
-    <nav class="toc" aria-label={lang === 'en' ? 'Sections' : 'Bagian'}>
+    <nav class="toc" data-spy aria-label={lang === 'en' ? 'Sections' : 'Bagian'}>
       <ol>
         {sections.map((s, i) => (
           <li><a class="tap" href={`#${s.id}`}><span class="n">{num(i)}</span>{s.label}</a></li>
@@ -299,5 +299,39 @@ const d = {
     // Let the download start, then close.
     link.addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 0); });
     dlg.addEventListener('close', function () { openBtn.focus(); });
+  })();
+</script>
+<script is:inline>
+  // Section spy: marks the table-of-contents link of the section being read (aria-current).
+  // A clicked link stays marked until the visitor scrolls again, so a short section near the
+  // end of the page (Skills) is not overruled by the last section.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('[data-spy] a[href^="#"]'));
+    if (!links.length) return;
+    var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+    var pinned = null, ticking = false;
+    function set(id) {
+      links.forEach(function (a) {
+        if (id && a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'location');
+        else a.removeAttribute('aria-current');
+      });
+    }
+    function compute() {
+      ticking = false;
+      if (pinned) return;
+      var line = window.innerHeight * 0.3, cur = null;
+      secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) cur = secs[secs.length - 1].id;
+      set(cur);
+    }
+    function unpin() { if (pinned) { pinned = null; compute(); } }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(compute); } }, { passive: true });
+    window.addEventListener('resize', compute);
+    ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, unpin, { passive: true }); });
+    links.forEach(function (a) {
+      a.addEventListener('click', function () { pinned = a.getAttribute('href').slice(1); set(pinned); });
+    });
+    var hash = location.hash.slice(1);
+    if (hash && secs.some(function (s) { return s.id === hash; })) { pinned = hash; set(hash); } else compute();
   })();
 </script>

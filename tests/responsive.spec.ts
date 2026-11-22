@@ -99,6 +99,24 @@ for (const p of pages) {
       else await expect(toc).toBeHidden();
     });
 
+    test('section nav marks the clicked and the scrolled-to section', async ({ page }) => {
+      test.skip(page.viewportSize()!.width < 960, 'section nav is hidden below 960 px');
+      const toc = page.locator('.toc');
+      const skills = toc.locator('a[href="#skills"]');
+      await skills.click();
+      await expect(skills).toHaveAttribute('aria-current', 'location');
+      await expect(toc.locator('a[aria-current]')).toHaveCount(1);
+      // Scrolling again releases the clicked link and follows the section on screen.
+      await page.mouse.move(700, 400);
+      await page.evaluate(() => {
+        const top = document.getElementById('experience')!.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, top - 20);
+      });
+      await page.mouse.wheel(0, 1);
+      await expect(toc.locator('a[href="#experience"]')).toHaveAttribute('aria-current', 'location');
+      await expect(skills).not.toHaveAttribute('aria-current', /./);
+    });
+
     test('print layout hides screen-only controls', async ({ page }) => {
       await page.emulateMedia({ media: 'print' });
       await expect(page.locator('.actions')).toBeHidden();
