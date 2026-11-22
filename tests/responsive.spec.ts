@@ -64,9 +64,9 @@ for (const p of pages) {
 
     test('achievement photos load, have alt text and fit the viewport', async ({ page }) => {
       const imgs = page.locator('#achievements .shot img');
-      await expect(imgs).toHaveCount(3);
+      await expect(imgs).toHaveCount(4);
       const width = page.viewportSize()!.width;
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 4; i++) {
         const img = imgs.nth(i);
         await img.scrollIntoViewIfNeeded();
         await expect(img).toHaveAttribute('alt', /.{20,}/);
@@ -74,6 +74,16 @@ for (const p of pages) {
         const box = await img.boundingBox();
         expect(box!.x + box!.width).toBeLessThanOrEqual(width);
       }
+    });
+
+    test('About shows a portrait that loads, has alt text and fits the viewport', async ({ page }) => {
+      const img = page.locator('#about .portrait img');
+      await img.scrollIntoViewIfNeeded();
+      await expect(img).toHaveAttribute('alt', /Rifki Hidayatullah/);
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+      const box = (await img.boundingBox())!;
+      expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+      expect(box.width).toBeGreaterThan(150);
     });
 
     test('contact links carry a prefilled message and the business phone', async ({ page }) => {
@@ -100,7 +110,7 @@ for (const p of pages) {
       const rail = page.locator('nav.rail');
       if (width < 1200) { await expect(rail).toBeHidden(); return; }
       await expect(rail).toBeVisible();
-      await expect(rail.locator('a')).toHaveCount(10);
+      await expect(rail.locator('a')).toHaveCount(11);
       // The menu never covers the page column.
       const railBox = (await rail.boundingBox())!;
       const mainBox = (await page.locator('main').boundingBox())!;

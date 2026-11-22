@@ -89,6 +89,16 @@ html.js.loaded .name .line:nth-child(2) > span { transition-delay: 110ms; }
 section.s { border-top: 1px solid var(--rule); padding: 72px 0 80px; scroll-margin-top: 8px; }
 .s h2 { margin: 0 0 40px; font-weight: 700; font-stretch: 86%; font-size: clamp(2rem, 5.5vw, 3.6rem); line-height: 1; letter-spacing: -0.035em; }
 .statement { margin: 0 0 36px; font-size: clamp(1.25rem, 2.6vw, 1.9rem); line-height: 1.25; font-weight: 500; font-stretch: 94%; letter-spacing: -0.015em; max-width: 26em; }
+/* Portrait in About: above the text on phones, on the right of it from 900 px. */
+.about-grid { display: grid; gap: 28px; }
+.portrait { margin: 0; width: min(260px, 70%); }
+.portrait img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; background: var(--rule); }
+@media (min-width: 900px) {
+  .about-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: start; }
+  .portrait { order: 2; width: 100%; }
+}
+/* The About statement is a full paragraph, so it runs smaller and wider than the one-line statements. */
+#about .statement { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.35; max-width: 34em; }
 .cols { display: grid; gap: 22px; grid-template-columns: 1fr; }
 .cols p { margin: 0; color: var(--muted); max-width: 52ch; }
 .cols strong { color: var(--fg); font-weight: 600; }
@@ -111,6 +121,18 @@ section.s { border-top: 1px solid var(--rule); padding: 72px 0 80px; scroll-marg
 .group + .group { margin-top: 48px; }
 .group-title { margin: 0 0 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 
+/* certifications: highlight cards, then the full list behind a toggle */
+.certs { display: grid; gap: 0 36px; grid-template-columns: 1fr; margin-bottom: 8px; }
+.cert { padding: 26px 0 26px 18px; border-top: 1px solid var(--rule); border-left: 3px solid var(--accent); }
+.cert .meta { margin-bottom: 6px; }
+.cert h3 { margin: 0 0 6px; font-size: 1.15rem; line-height: 1.25; font-weight: 600; font-stretch: 94%; }
+.cert p { margin: 0 0 6px; color: var(--muted); max-width: 46ch; }
+.cert .event { color: var(--fg); }
+@media (min-width: 640px) { .certs { grid-template-columns: 1fr 1fr; } }
+.more-certs summary { cursor: pointer; display: inline-block; min-height: 24px; }
+.more-certs ul { margin-top: 12px; }
+.more-certs .when { display: inline-block; min-width: 4.6em; color: var(--fg); font-variant-numeric: tabular-nums; }
+
 /* three columns */
 .trio { display: grid; gap: 0; grid-template-columns: 1fr; }
 .trio > div { padding: 26px 0; border-top: 1px solid var(--rule); }
@@ -122,6 +144,7 @@ section.s { border-top: 1px solid var(--rule); padding: 72px 0 80px; scroll-marg
 .shots { display: grid; gap: 12px; margin-top: 16px; grid-template-columns: 1fr; max-width: 700px; }
 @media (min-width: 520px) { .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .shots:has(> .shot:only-child) { grid-template-columns: minmax(0, 340px); }
+@media (min-width: 640px) { .shots:has(> .shot:nth-child(3)) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .shot { margin: 0; }
 .shot a { display: block; }
 .shot img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 3px; }
@@ -161,6 +184,9 @@ html.js .reveal.in { opacity: 1; transform: none; }
   html.js .name .line > span, html.js .reveal { transform: none !important; opacity: 1 !important; transition: none !important; }
   .caret { animation: none; }
 }
+
+.item ul.links { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 20px; max-width: none; }
+.item ul.links li { margin: 0; }
 
 /* Section menu on the right, from 1200 px. The page column moves left when the margin is
    narrower than the menu, so the menu never covers text. */
@@ -227,7 +253,7 @@ html.js .to-top:not(.show) { opacity: 0; visibility: hidden; }
 /* Ctrl+P on the website: a plain one-column print. The ATS PDFs are the proper print version. */
 @media print {
   :root { --bg: #fff; --fg: #000; --muted: #333; --rule: #bbb; --accent: #000; }
-  .top nav, .tools, .skip, .shots, .rail, .to-top, .cv-dialog, .typed, .hero-row > div:last-child { display: none !important; }
+  .top nav, .tools, .skip, .shots, .portrait, .rail, .to-top, .cv-dialog, .typed, .hero-row > div:last-child { display: none !important; }
   .name { font-size: 40pt; }
   html.js .name .line > span, html.js .reveal { transform: none !important; opacity: 1 !important; }
   section.s { padding: 18px 0; break-inside: auto; }

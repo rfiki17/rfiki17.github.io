@@ -35,19 +35,21 @@ export const heroIntro: T = {
   id: 'Saya menguji sistem penerbangan, travel, dan enterprise di PT Aero Systems Indonesia (ASYST), bagian dari Garuda Indonesia Group, sambil menyelesaikan Magister Teknologi Informasi di Universitas Indonesia.',
 };
 
+// About text as written by the owner on 22 Nov 2026. Paragraph 1 is the large statement,
+// paragraphs 2 and 3 are the two columns.
 export const aboutStatement: T = {
-  en: 'I write test criteria that can be proven, record findings with evidence, and close gaps before release. I want to do the same work at the level of controls and risk.', // v1
-  id: 'Saya menulis kriteria uji yang bisa dibuktikan, mencatat temuan dengan bukti, dan menutup celah sebelum rilis. Saya ingin melakukan hal yang sama pada level kontrol dan risiko.',
+  en: 'QA / Software Test Engineer with 3+ years at PT Aero Systems Indonesia (Garuda Indonesia Group). I apply the full Software Testing Life Cycle, from requirement analysis and risk-based test design to execution, defect management and release sign-off, on mission-critical platforms in aviation, travel, procurement and healthcare.',
+  id: 'QA / Software Test Engineer dengan pengalaman 3+ tahun di PT Aero Systems Indonesia (Garuda Indonesia Group). Saya menerapkan Software Testing Life Cycle secara utuh, dari analisis kebutuhan dan desain uji berbasis risiko sampai eksekusi, manajemen defect, dan sign-off rilis, pada platform mission-critical di bidang penerbangan, perjalanan, pengadaan, dan kesehatan.',
 };
 
 export const aboutCols: T[] = [
   {
-    en: 'My background is in <strong>Information Systems</strong> at Universitas Multimedia Nusantara. My undergraduate thesis applied COBIT 2019 to IT asset management governance, and my interest in IT governance has stayed consistent from undergraduate to graduate study.',
-    id: 'Latar belakang saya adalah <strong>Sistem Informasi</strong> di Universitas Multimedia Nusantara. Skripsi saya menerapkan COBIT 2019 pada tata kelola manajemen aset TI, dan minat saya pada tata kelola TI konsisten dari S1 sampai S2.',
+    en: 'My daily work covers manual testing, REST API testing with Postman, performance, load and stress testing with JMeter, and test automation with Playwright and TypeScript. I validate data through SQL and report defect trends and release risks to stakeholders so releases reach production in a known state.',
+    id: 'Pekerjaan harian saya mencakup manual testing, REST API testing dengan Postman, performance, load, dan stress testing dengan JMeter, serta test automation dengan Playwright dan TypeScript. Saya memvalidasi data melalui SQL serta melaporkan tren defect dan risiko rilis kepada stakeholder, sehingga setiap rilis masuk ke production dalam kondisi yang diketahui.',
   },
   {
-    en: 'At Universitas Indonesia I study Information Technology with a focus on <strong>IT governance, risk and compliance</strong>, including AI risk. I am a member of ISACA Indonesia Chapter, and CISA is my next certification target.',
-    id: 'Di Universitas Indonesia saya menempuh Teknologi Informasi dengan fokus <strong>tata kelola, risiko, dan kepatuhan TI</strong>, termasuk risiko AI. Saya anggota ISACA Indonesia Chapter, dan CISA adalah target sertifikasi berikutnya.',
+    en: 'Alongside testing, I study IT governance at Universitas Indonesia and have applied COBIT 2019, TOGAF, ITIL, ISO/IEC 27001 and ISO/IEC 27005 in case studies on risk assessment, governance evaluation and enterprise architecture.',
+    id: 'Selain pengujian, saya menempuh studi tata kelola TI di Universitas Indonesia dan telah menerapkan COBIT 2019, TOGAF, ITIL, ISO/IEC 27001, dan ISO/IEC 27005 dalam studi kasus penilaian risiko, evaluasi tata kelola, dan arsitektur enterprise.',
   },
 ];
 
@@ -104,24 +106,91 @@ export const research: { meta: T; title: T; body: T; stack: string }[] = [
 ];
 
 // Leadership roles. The IDLS role is the achievement tagged group: 'leadership' in cv.ts.
-export const leadership: { meta: T; title: T; body: T }[] = [
+export const leadership: { meta: T; title: T; body: T; links?: { href: string; label: T }[] }[] = [
   {
-    meta: { en: 'FORMA MTI, 2026', id: 'FORMA MTI, 2026' }, // v1
-    title: { en: 'Head of Partnerships and External Relations', id: 'Kepala Divisi Kemitraan dan Hubungan Eksternal' },
+    meta: { en: 'FORMA MTI (Forum Mahasiswa MTI), Universitas Indonesia, 2026', id: 'FORMA MTI (Forum Mahasiswa MTI), Universitas Indonesia, 2026' },
+    title: { en: 'Head of Partnerships and External Relations', id: 'Ketua Divisi Kemitraan dan Hubungan Luar' },
     body: {
-      en: 'Arranged company visits to Google Indonesia (held August 2026), GoTo and Microsoft Indonesia. Helped organise the 8 June inauguration and seminar with speakers from ILUNI UI and Garuda Indonesia.',
-      id: 'Mengatur kunjungan perusahaan ke Google Indonesia (terlaksana Agustus 2026), GoTo, dan Microsoft Indonesia. Membantu menyelenggarakan pelantikan dan seminar 8 Juni dengan pembicara dari ILUNI UI dan Garuda Indonesia.',
+      en: 'Secured and scheduled industry visits for MTI students to Google Indonesia and GoTo.',
+      id: 'Berhasil mengagendakan kunjungan industri mahasiswa MTI ke Google Indonesia dan GoTo.',
     },
+    links: [
+      { href: 'https://www.instagram.com/p/DcwDZ3kHwfk/', label: { en: 'Visit to Google Indonesia (Instagram)', id: 'Kunjungan ke Google Indonesia (Instagram)' } },
+      { href: 'https://www.instagram.com/p/De1CbJ-n4fb/', label: { en: 'Visit to GoTo (Instagram)', id: 'Kunjungan ke GoTo (Instagram)' } },
+      { href: 'https://www.instagram.com/p/DcwBtDxCWTa/', label: { en: 'Appointment as head of division (Instagram)', id: 'Pengangkatan ketua divisi (Instagram)' } },
+    ],
   },
 ];
 
-export const training: { meta: T; title: T; body: T } = {
-  meta: { en: 'Training', id: 'Pelatihan' }, // v1
-  title: { en: 'Governance, audit and security', id: 'Tata kelola, audit, dan keamanan' },
-  body: {
-    en: 'COBIT 2019, risk-based IT audit, IS audit practices and ISO 27001 through Taalenta Digital Inteleksia and Inixindo Jogja. CISA is my next target.',
-    id: 'COBIT 2019, audit TI berbasis risiko, praktik audit SI, dan ISO 27001 melalui Taalenta Digital Inteleksia dan Inixindo Jogja. CISA adalah target berikutnya.',
+// Certificates, checked against the files in Documents\Asset Rifki\Sertifikat on 22 Nov 2026.
+// The certificate files themselves are not published (the TOEIC one shows ID number and date of birth).
+export type Cert = { date: T; title: T; issuer: T; detail?: T };
+
+// Shown as highlights, newest first.
+export const certHighlights: Cert[] = [
+  {
+    date: { en: 'Sep 2026', id: 'Sep 2026' },
+    title: { en: 'Bootcamp: IT Auditing and GRC', id: 'Bootcamp: IT Auditing and GRC' },
+    issuer: { en: 'Think Cloudly', id: 'Think Cloudly' },
+    detail: { en: 'Certificate of participation, 5 CPE for 5 hours of training.', id: 'Sertifikat partisipasi, 5 CPE untuk 5 jam pelatihan.' },
   },
+  {
+    date: { en: 'Sep 2025', id: 'Sep 2025' },
+    title: { en: 'Cybersecurity for Beginners: Privacy and Personal Data Protection', id: 'Cybersecurity for Beginners: Privacy and Personal Data Protection' },
+    issuer: { en: 'Faculty of Computer Science, Universitas Indonesia, with KOICA and Pai Chai University', id: 'Fakultas Ilmu Komputer Universitas Indonesia, bersama KOICA dan Pai Chai University' },
+    detail: { en: 'Certificate of completion. 6 modules, 30 hours, including Indonesian data protection regulation. Marks of 93 to 100 per module.', id: 'Sertifikat kelulusan. 6 modul, 30 jam, termasuk regulasi pelindungan data Indonesia. Nilai 93 sampai 100 per modul.' },
+  },
+  {
+    date: { en: 'Dec 2024', id: 'Des 2024' },
+    title: { en: 'Risk-Based Audit with CISA Competency, and COBIT 2019', id: 'Risk-Based Audit with CISA Competency, dan COBIT 2019' },
+    issuer: { en: 'PT Taalenta Digital Inteleksia', id: 'PT Taalenta Digital Inteleksia' },
+    detail: { en: 'Two four-session classes, 8 training hours each. The COBIT class covered cyber security through IT maturity improvement. CISA is my next certification target.', id: 'Dua kelas empat sesi, masing-masing 8 jam pelatihan. Kelas COBIT membahas keamanan siber melalui peningkatan kematangan TI. CISA adalah target sertifikasi saya berikutnya.' },
+  },
+  {
+    date: { en: 'Apr 2024', id: 'Apr 2024' },
+    title: { en: 'TOEIC Listening and Reading: 875', id: 'TOEIC Listening and Reading: 875' },
+    issuer: { en: 'ETS, via International Test Center', id: 'ETS, melalui International Test Center' },
+    detail: { en: 'Listening 480, Reading 395 (out of 495 each).', id: 'Listening 480, Reading 395 (masing-masing dari 495).' },
+  },
+];
+
+// Shorter groups under the highlights. A group with more than 2 items folds behind a toggle.
+export const certGroups: { meta: T; summary: T; toggle?: T; items: { date: T; title: string }[] }[] = [
+  {
+    meta: { en: 'ISACA', id: 'ISACA' },
+    summary: { en: '3 webinars eligible for ISACA CPE, on AI and cyber skills, the state of cybersecurity and the EU AI Act, 2025 to 2026', id: '3 webinar yang diakui sebagai CPE ISACA, tentang AI dan keterampilan siber, kondisi keamanan siber, dan EU AI Act, 2025 sampai 2026' },
+    toggle: { en: 'Show all 3 sessions', id: 'Lihat ketiga sesi' },
+    items: [
+      { date: { en: 'Sep 2026', id: 'Sep 2026' }, title: 'The EU AI Act in 2026: What It Requires, What Changed in July, and What to Do Next' },
+      { date: { en: 'Sep 2026', id: 'Sep 2026' }, title: 'State of Cybersecurity 2025' },
+      { date: { en: 'May 2025', id: 'Mei 2025' }, title: 'AI & Cyber Skills: Empowering a Workforce to Combat a Rapidly Evolving Threat Landscape' },
+    ],
+  },
+  {
+    meta: { en: 'Inixindo Jogja', id: 'Inixindo Jogja' },
+    summary: { en: '7 webinars on IT audit, COBIT 2019, ISO 27001, penetration testing and AI in testing, 2025 to 2026', id: '7 webinar tentang audit TI, COBIT 2019, ISO 27001, penetration testing, dan AI dalam pengujian, 2025 sampai 2026' },
+    toggle: { en: 'Show all 7 sessions', id: 'Lihat ketujuh sesi' },
+    items: [
+      { date: { en: 'Apr 2026', id: 'Apr 2026' }, title: 'The Future of Testing: AI-Powered Test Automation & Intelligent Bug Detection' },
+      { date: { en: 'Nov 2025', id: 'Nov 2025' }, title: 'Checkpoint Security: Peran Cyber Drill dalam Implementasi ISO 27001' },
+      { date: { en: 'Oct 2025', id: 'Okt 2025' }, title: 'Mewujudkan Operational Excellence Melalui Audit Sistem Informasi yang Efektif' },
+      { date: { en: 'Oct 2025', id: 'Okt 2025' }, title: 'Audit Sistem Informasi sebagai Enabler Bisnis: Dari Risiko ke Peluang' },
+      { date: { en: 'Sep 2025', id: 'Sep 2025' }, title: 'Workshop Membuat Laporan Profesional Penetration Test untuk Klien' },
+      { date: { en: 'Sep 2025', id: 'Sep 2025' }, title: 'Penetration Tester Profesional: Cara Menguasai Skill Hacking Legal (Batch 2)' },
+      { date: { en: 'May 2025', id: 'Mei 2025' }, title: 'COBIT 2019: Jurus IT Membangun Trust dengan Direksi dan Perusahaan Lewat Tata Kelola Sumber Daya yang Terukur' },
+    ],
+  },
+  {
+    meta: { en: 'LRQA', id: 'LRQA' },
+    summary: { en: 'Webinar certificate', id: 'Sertifikat webinar' },
+    items: [
+      { date: { en: 'May 2025', id: 'Mei 2025' }, title: 'ISO 27001:2022 Transition Countdown: Your Questions Answered' },
+    ],
+  },
+];
+
+export const certUi = {
+  heading: { en: 'Certifications and training', id: 'Sertifikasi dan pelatihan' },
 };
 
 export const contactStatement: T = {
@@ -152,6 +221,7 @@ export const rail = [
   { id: 'research', en: 'Research', id_: 'Riset' },
   { id: 'leadership', en: 'Leadership', id_: 'Kepemimpinan' },
   { id: 'achievements', en: 'Achievements', id_: 'Pencapaian' },
+  { id: 'certs', en: 'Certifications', id_: 'Sertifikasi' },
   { id: 'education', en: 'Education', id_: 'Pendidikan' },
   { id: 'skills', en: 'Skills', id_: 'Keahlian' },
   { id: 'contact', en: 'Contact', id_: 'Kontak' },
@@ -170,5 +240,6 @@ export const ui2 = {
   download: { en: 'Download CV', id: 'Unduh CV' },
   switchLang: { en: 'Baca dalam Bahasa Indonesia', id: 'Read in English' },
   sections: { en: 'Sections', id: 'Bagian' },
+  portraitAlt: { en: 'Rifki Hidayatullah smiling and holding up the grand finalist medal at the BRI GAMA IBCC 2026 Announcement of Champions in Jakarta', id: 'Rifki Hidayatullah tersenyum sambil mengangkat medali grand finalist di Announcement of Champions BRI GAMA IBCC 2026 di Jakarta' },
   toTop: { en: 'Back to top', id: 'Kembali ke atas' },
 };

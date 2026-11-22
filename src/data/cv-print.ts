@@ -94,6 +94,14 @@ export const printAchievements: { title: T; where: T; date: T }[] = [
     date: { en: 'Oct 2026', id: 'Okt 2026' },
   },
   {
+    title: { en: 'Head of Partnerships and External Relations, FORMA MTI', id: 'Ketua Divisi Kemitraan dan Hubungan Luar, FORMA MTI' },
+    where: {
+      en: 'MTI student forum, Universitas Indonesia, arranged industry visits to Google Indonesia and GoTo',
+      id: 'Forum mahasiswa MTI, Universitas Indonesia, mengagendakan kunjungan industri ke Google Indonesia dan GoTo',
+    },
+    date: { en: '2026', id: '2026' },
+  },
+  {
     title: { en: 'Top 10 Grand Finalist, Graduate Category', id: 'Top 10 Grand Finalist, Kategori Pascasarjana' },
     where: {
       en: 'BRI GAMA International Business Case Competition 2026, Team Leader of Team RAM, out of 60+ teams worldwide',
@@ -132,7 +140,14 @@ export const printUi = {
     more: { en: 'Additional Information', id: 'Informasi Tambahan' },
     membership: { en: 'Membership', id: 'Keanggotaan' },
     languages: { en: 'Languages', id: 'Bahasa' },
+    training: { en: 'Training', id: 'Pelatihan' },
   },
+  // TOEIC sits in the languages line, so it is not repeated here.
+  training: {
+    en: 'IT Auditing and GRC Bootcamp, Think Cloudly (5 CPE, 2026) | Cybersecurity for Beginners: Privacy and Personal Data Protection, Faculty of Computer Science UI with KOICA (30 hours, 2025) | Risk-Based Audit with CISA Competency and COBIT 2019, Taalenta Digital Inteleksia (8 hours each, 2024) | 3 ISACA CPE webinars (2025 to 2026) | ISO 27001:2022 transition webinar, LRQA (2025) | 7 Inixindo Jogja webinars on IT audit, ISO 27001, penetration testing and AI in testing (2025 to 2026)',
+    id: 'IT Auditing and GRC Bootcamp, Think Cloudly (5 CPE, 2026) | Cybersecurity for Beginners: Privacy and Personal Data Protection, Fasilkom UI bersama KOICA (30 jam, 2025) | Risk-Based Audit with CISA Competency dan COBIT 2019, Taalenta Digital Inteleksia (masing-masing 8 jam, 2024) | 3 webinar CPE ISACA (2025 sampai 2026) | Webinar transisi ISO 27001:2022, LRQA (2025) | 7 webinar Inixindo Jogja tentang audit TI, ISO 27001, penetration testing, dan AI dalam pengujian (2025 sampai 2026)',
+  },
+
   present: { en: 'Present', id: 'Sekarang' },
   competencies: { en: 'Core Competencies', id: 'Kompetensi Utama' },
   grcProjects: { en: 'IT GRC Projects and Case Studies', id: 'Proyek dan Studi Kasus IT GRC' },

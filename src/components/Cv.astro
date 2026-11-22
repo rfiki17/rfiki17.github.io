@@ -5,7 +5,7 @@ import {
 } from '../data/cv';
 import {
   availability, phrases, tagline, heroIntro, aboutStatement, aboutCols, whatIDo, research, leadership,
-  training, contactStatement, messages, nav, ui2, rail,
+  certHighlights, certGroups, certUi, contactStatement, messages, nav, ui2, rail,
 } from '../data/v2';
 import DownloadDialog from './DownloadDialog.astro';
 
@@ -70,9 +70,18 @@ const nameParts = profile.name.split(' ');
 
     <section class="s" id="about" aria-labelledby="h-about">
       <h2 class="reveal" id="h-about">{t(nav.about)}</h2>
-      <p class="statement reveal">{t(aboutStatement)}</p>
-      <div class="cols reveal">
-        {aboutCols.map((c) => <p set:html={t(c)} />)}
+      <div class="about-grid">
+        <figure class="portrait reveal">
+          <img src="/img/portrait-600.webp" srcset="/img/portrait-600.webp 600w, /img/portrait-1000.webp 1000w"
+            sizes="(min-width: 900px) 300px, 260px" width="1000" height="1250" loading="lazy" decoding="async"
+            alt={t(ui2.portraitAlt)} />
+        </figure>
+        <div>
+          <p class="statement reveal">{t(aboutStatement)}</p>
+          <div class="cols reveal">
+            {aboutCols.map((c) => <p set:html={t(c)} />)}
+          </div>
+        </div>
       </div>
     </section>
 
@@ -171,6 +180,11 @@ const nameParts = profile.name.split(' ');
             <div>
               <h3>{t(l.title)}</h3>
               <p>{t(l.body)}</p>
+              {l.links && (
+                <ul class="links">
+                  {l.links.map((k) => <li><a class="link small" href={k.href} rel="noopener" target="_blank">{t(k.label)}</a></li>)}
+                </ul>
+              )}
             </div>
           </article>
         ))}
@@ -211,6 +225,47 @@ const nameParts = profile.name.split(' ');
       </div>
     </section>
 
+    <section class="s" id="certs" aria-labelledby="h-certs">
+      <h2 class="reveal" id="h-certs">{t(certUi.heading)}</h2>
+      <div class="certs reveal">
+        {certHighlights.map((c) => (
+          <article class="cert">
+            <div class="meta">{t(c.date)}</div>
+            <h3>{t(c.title)}</h3>
+            <p class="event">{t(c.issuer)}</p>
+            {c.detail && <p>{t(c.detail)}</p>}
+          </article>
+        ))}
+      </div>
+      <div class="list reveal">
+        {certGroups.map((g) => (
+          <article class="item">
+            <div class="meta">{t(g.meta)}</div>
+            <div>
+              {g.toggle ? (
+                <>
+                  <p>{t(g.summary)}.</p>
+                  <details class="more-certs">
+                    <summary class="link small">{t(g.toggle)}</summary>
+                    <ul>
+                      {g.items.map((c) => <li><span class="when">{t(c.date)}</span> {c.title}</li>)}
+                    </ul>
+                  </details>
+                </>
+              ) : (
+                g.items.map((c) => (
+                  <>
+                    <h3>{c.title}</h3>
+                    <p>{t(g.summary)} · {t(c.date)}</p>
+                  </>
+                ))
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="s" id="education" aria-labelledby="h-education">
       <h2 class="reveal" id="h-education">{t(ui.education)}</h2>
       <div class="list reveal">
@@ -223,13 +278,6 @@ const nameParts = profile.name.split(' ');
             </div>
           </article>
         ))}
-        <article class="item">
-          <div class="meta">{t(training.meta)}</div>
-          <div>
-            <h3>{t(training.title)}</h3>
-            <p>{t(training.body)}</p>
-          </div>
-        </article>
         <article class="item">
           <div class="meta">{t(ui.languages)}</div>
           <div><p>{languages.map((l) => t(l)).join(' · ')}</p></div>

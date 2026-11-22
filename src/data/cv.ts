@@ -395,8 +395,8 @@ export const achievements: Achievement[] = [
     },
     photos: [
       {
-        base: 'gama-medal', w: 1200, h: 1596, pos: 'center 30%',
-        alt: { en: 'Rifki Hidayatullah holding the grand finalist medal at the BRI GAMA IBCC 2026 announcement of champions', id: 'Rifki Hidayatullah memegang medali grand finalist di pengumuman juara BRI GAMA IBCC 2026' },
+        base: 'gama-stage', w: 1600, h: 1067, pos: 'center 35%',
+        alt: { en: 'Rifki Hidayatullah wearing the grand finalist medal in front of the BRI GAMA IBCC 2026 Announcement of Champions backdrop, Jakarta', id: 'Rifki Hidayatullah mengenakan medali grand finalist di depan latar Announcement of Champions BRI GAMA IBCC 2026, Jakarta' },
       },
       {
         base: 'gama-certificate', w: 1600, h: 1131,
@@ -435,6 +435,12 @@ export const achievements: Achievement[] = [
       href: 'https://cs.ui.ac.id/2026/08/28/kunjungan-dosen-dan-mahasiswa-fasilkom-ui-ke-um-dan-ukm/',
       label: { en: 'Visit report by Fasilkom UI', id: 'Berita kunjungan oleh Fasilkom UI' },
     },
+    photos: [
+      {
+        base: 'um-campus', w: 1600, h: 2133, pos: 'center 70%',
+        alt: { en: 'Rifki Hidayatullah sitting on the steps below the Universiti Malaya 2026 sign during the exchange, Kuala Lumpur', id: 'Rifki Hidayatullah duduk di tangga di bawah papan Universiti Malaya 2026 saat program pertukaran, Kuala Lumpur' },
+      },
+    ],
   },
 ];
 
@@ -554,5 +560,5 @@ export const education: { school: string; degree: T; period: T; note?: T }[] = [
 
 export const languages: T[] = [
   { en: 'Indonesian (native)', id: 'Bahasa Indonesia (penutur asli)' },
-  { en: 'English (professional working proficiency)', id: 'Bahasa Inggris (profesional)' },
+  { en: 'English (professional working proficiency, TOEIC 875)', id: 'Bahasa Inggris (profesional, TOEIC 875)' },
 ];
