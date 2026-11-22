@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 // Download CV dialog: step 1 language, step 2 CV type. Runs on every device profile.
-for (const page0 of [{ path: '/', lang: 'EN', open: 'Download CV (PDF)' }, { path: '/id/', lang: 'ID', open: 'Unduh CV (PDF)' }]) {
+for (const page0 of [{ path: '/', lang: 'EN' }, { path: '/id/', lang: 'ID' }]) {
   test.describe(`download dialog on ${page0.path}`, () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(page0.path);
-      await page.getByRole('button', { name: page0.open }).click();
+      await page.locator('header.top .cv-open').click();
     });
 
     test('opens as a modal with the page language preselected', async ({ page }) => {
@@ -43,8 +43,8 @@ for (const page0 of [{ path: '/', lang: 'EN', open: 'Download CV (PDF)' }, { pat
       const dlg = page.getByRole('dialog');
       await page.keyboard.press('Escape');
       await expect(dlg).toBeHidden();
-      await expect(page.getByRole('button', { name: page0.open })).toBeFocused();
-      await page.getByRole('button', { name: page0.open }).click();
+      await expect(page.locator('header.top .cv-open')).toBeFocused();
+      await page.locator('header.top .cv-open').click();
       await dlg.locator('.cvd-actions button').click();
       await expect(dlg).toBeHidden();
     });

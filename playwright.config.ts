@@ -8,13 +8,15 @@ export default defineConfig({
   retries: 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: 'http://localhost:4401',
     trace: 'retain-on-failure',
+    // Reveal and typing animations are off by default in tests. tests/responsive.spec.ts checks them once.
+    reducedMotion: 'reduce',
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://localhost:4321',
+    command: 'npm run build && node scripts/serve.mjs 4401',
+    url: 'http://localhost:4401',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

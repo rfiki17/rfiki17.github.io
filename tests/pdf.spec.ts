@@ -59,6 +59,5 @@ test('GRC CV lists all 5 case studies with their bullets', async ({ page }) => {
 
 test('website shows the business phone with a WhatsApp link', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.contact a[href="tel:+6285817711143"]')).toHaveText('+62 858-1771-1143');
-  await expect(page.locator('.contact a[href="https://wa.me/6285817711143"]')).toBeVisible();
+  await expect(page.locator('#contact a[href^="https://wa.me/6285817711143"]')).toHaveText('+62 858-1771-1143');
 });

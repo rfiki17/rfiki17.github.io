@@ -1,0 +1,92 @@
+---
+// Two-step download dialog: 1. language, 2. CV type. Opened by any element with class "cv-open".
+import type { Lang } from '../data/cv';
+import { trackFileName } from '../data/cv-print';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = (x: { en: string; id: string }) => x[lang];
+const d = {
+  title: { en: 'Download CV', id: 'Unduh CV' },
+  intro: { en: 'Both CV types are ATS-friendly PDFs of up to 2 pages.', id: 'Kedua jenis CV berupa PDF ramah ATS, maksimal 2 halaman.' },
+  step1: { en: 'Language', id: 'Bahasa' },
+  step2: { en: 'CV type', id: 'Jenis CV' },
+  qaTitle: { en: 'QA / Software Test Engineer', id: 'QA / Software Test Engineer' },
+  qaDesc: { en: 'Testing, automation, API and performance, with 8 key projects.', id: 'Pengujian, otomasi, API, dan performa, dengan 8 proyek utama.' },
+  grcTitle: { en: 'IT Governance, Risk and Compliance', id: 'IT Governance, Risk and Compliance' },
+  grcDesc: { en: 'COBIT 2019, ISO/IEC 27001 and 27005, NIST CSF, with GRC case studies first.', id: 'COBIT 2019, ISO/IEC 27001 dan 27005, NIST CSF, dengan studi kasus GRC di bagian awal.' },
+  file: { en: 'File', id: 'File' },
+  cancel: { en: 'Cancel', id: 'Batal' },
+  download: { en: 'Download PDF', id: 'Unduh PDF' },
+  close: { en: 'Close', id: 'Tutup' },
+};
+---
+<dialog id="cv-dialog" class="cv-dialog" aria-labelledby="cvd-title" aria-describedby="cvd-intro">
+  <form method="dialog" class="cvd-form">
+    <div class="cvd-head">
+      <h2 id="cvd-title">{t(d.title)}</h2>
+      <button class="tap cvd-x" value="cancel" aria-label={t(d.close)}>×</button>
+    </div>
+    <p id="cvd-intro" class="cvd-intro">{t(d.intro)}</p>
+
+    <fieldset>
+      <legend><span class="cvd-step">1</span>{t(d.step1)}</legend>
+      <div class="cvd-row">
+        <label class="cvd-opt tap"><input type="radio" name="cv-lang" value="en" checked={lang === 'en'} /> English</label>
+        <label class="cvd-opt tap"><input type="radio" name="cv-lang" value="id" checked={lang === 'id'} /> Bahasa Indonesia</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="cvd-step">2</span>{t(d.step2)}</legend>
+      <label class="cvd-opt cvd-card tap">
+        <input type="radio" name="cv-track" value="qa" checked />
+        <span><strong>{t(d.qaTitle)}</strong><small>{t(d.qaDesc)}</small></span>
+      </label>
+      <label class="cvd-opt cvd-card tap">
+        <input type="radio" name="cv-track" value="grc" />
+        <span><strong>{t(d.grcTitle)}</strong><small>{t(d.grcDesc)}</small></span>
+      </label>
+    </fieldset>
+
+    <p class="cvd-file" aria-live="polite">{t(d.file)}: <code class="cvd-name">{trackFileName('qa', lang)}</code></p>
+
+    <div class="cvd-actions">
+      <button class="tap chip" value="cancel">{t(d.cancel)}</button>
+      <a class="tap chip chip-solid cvd-download" href={`/cv/${trackFileName('qa', lang)}`} download type="application/pdf">{t(d.download)}</a>
+    </div>
+  </form>
+</dialog>
+
+<noscript>
+  <p class="cv-fallback wrap">{t(d.title)}:
+    <a href={`/cv/${trackFileName('qa', 'en')}`} download>QA EN</a> ·
+    <a href={`/cv/${trackFileName('qa', 'id')}`} download>QA ID</a> ·
+    <a href={`/cv/${trackFileName('grc', 'en')}`} download>GRC EN</a> ·
+    <a href={`/cv/${trackFileName('grc', 'id')}`} download>GRC ID</a>
+  </p>
+</noscript>
+
+<script is:inline>
+  (function () {
+    var dlg = document.getElementById('cv-dialog');
+    var openers = document.querySelectorAll('.cv-open');
+    if (!dlg || !openers.length || typeof dlg.showModal !== 'function') return;
+    var link = dlg.querySelector('.cvd-download');
+    var nameEl = dlg.querySelector('.cvd-name');
+    var lastOpener = openers[0];
+    function pick(name) { var el = dlg.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+    function update() {
+      var file = 'Rifki-Hidayatullah-CV-' + pick('cv-track').toUpperCase() + '-' + pick('cv-lang').toUpperCase() + '.pdf';
+      link.href = '/cv/' + file;
+      nameEl.textContent = file;
+    }
+    dlg.addEventListener('change', update);
+    openers.forEach(function (btn) {
+      btn.addEventListener('click', function () { lastOpener = btn; update(); dlg.showModal(); });
+    });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    link.addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 0); });
+    dlg.addEventListener('close', function () { lastOpener.focus(); });
+  })();
+</script>

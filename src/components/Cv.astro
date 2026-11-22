@@ -1,8 +1,13 @@
 ---
+// v2 layout in the style of the 19 Sep 2026 site, with the current CV content.
 import {
-  profile, ui, summary, approach, experience, achievements, projectGroups, grcCases, skills, education, languages, type Lang,
+  profile, ui, experience, achievements, projectGroups, grcCases, skills, education, languages, type Lang,
 } from '../data/cv';
-import { trackFileName, type Track } from '../data/cv-print';
+import {
+  availability, phrases, tagline, heroIntro, aboutStatement, aboutCols, whatIDo, research, leadership,
+  training, contactStatement, messages, nav, ui2, rail,
+} from '../data/v2';
+import DownloadDialog from './DownloadDialog.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -10,328 +15,365 @@ const t = (x: { en: string; id: string }) => x[lang];
 const otherHref = lang === 'en' ? '/id/' : '/';
 const otherLang = lang === 'en' ? 'id' : 'en';
 const projectCount = projectGroups.reduce((n, g) => n + g.items.length, 0);
-
-const sections = [
-  { id: 'summary', label: t(ui.summary) },
-  { id: 'approach', label: t(ui.approach) },
-  { id: 'experience', label: t(ui.experience) },
-  { id: 'achievements', label: t(ui.achievements) },
-  { id: 'projects', label: t(ui.projects) },
-  { id: 'grc', label: t(ui.grc) },
-  { id: 'skills', label: t(ui.skills) },
-  { id: 'education', label: t(ui.education) },
-];
-const num = (i: number) => String(i + 1).padStart(2, '0');
-const n = (id: string) => num(sections.findIndex((s) => s.id === id));
-
-// Download dialog: step 1 language, step 2 CV type. Four ATS PDFs are built by scripts/build-pdf.mjs.
-const fileName = (track: Track, l: Lang) => trackFileName(track, l);
-const d = {
-  title: { en: 'Download CV', id: 'Unduh CV' },
-  intro: { en: 'Both CV types are ATS-friendly PDFs of up to 2 pages.', id: 'Kedua jenis CV berupa PDF ramah ATS, maksimal 2 halaman.' },
-  step1: { en: 'Language', id: 'Bahasa' },
-  step2: { en: 'CV type', id: 'Jenis CV' },
-  qaTitle: { en: 'QA / Software Test Engineer', id: 'QA / Software Test Engineer' },
-  qaDesc: { en: 'Testing, automation, API and performance, with 8 key projects.', id: 'Pengujian, otomasi, API, dan performa, dengan 8 proyek utama.' },
-  grcTitle: { en: 'IT Governance, Risk and Compliance', id: 'IT Governance, Risk and Compliance' },
-  grcDesc: { en: 'COBIT 2019, ISO/IEC 27001 and 27005, NIST CSF, with GRC case studies first.', id: 'COBIT 2019, ISO/IEC 27001 dan 27005, NIST CSF, dengan studi kasus GRC di bagian awal.' },
-  file: { en: 'File', id: 'File' },
-  cancel: { en: 'Cancel', id: 'Batal' },
-  download: { en: 'Download PDF', id: 'Unduh PDF' },
-  close: { en: 'Close', id: 'Tutup' },
-};
+const awards = achievements.filter((a) => a.group !== 'leadership');
+const idlsLead = achievements.find((a) => a.group === 'leadership');
+const m = messages[lang];
+const mailHref = `mailto:${profile.email}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+const waHref = `${profile.whatsappHref}?text=${encodeURIComponent(m.wa)}`;
+const nameParts = profile.name.split(' ');
 ---
 <a class="skip" href="#main">{t(ui.skip)}</a>
-<div class="page">
-  <header class="aside">
-    <div class="id-block">
-      <h1 class="name">{profile.name}</h1>
-      <p class="role">{t(profile.role)}</p>
-      <p class="focus"><span class="focus-label">{t(ui.focusLabel)}</span> {t(profile.focus)}</p>
-      <p class="member">{t(profile.membership)}</p>
-      <p class="loc">{t(profile.location)}</p>
-    </div>
-
-    <ul class="contact" aria-label={t(ui.contact)}>
-      <li><a class="tap" href={`mailto:${profile.email}`}>{profile.email}</a></li>
-      <li class="phone-row">
-        <a class="tap" href={profile.phoneHref}>{profile.phone}</a>
-        <a class="tap wa" href={profile.whatsappHref} rel="noopener" target="_blank">WhatsApp</a>
-      </li>
-      <li><a class="tap" href={profile.linkedin} rel="me noopener">{profile.linkedinLabel}</a></li>
-    </ul>
-
-    <div class="actions">
-      <a class="tap btn" href={otherHref} hreflang={otherLang} lang={otherLang}>{t(ui.langName)}</a>
-      <button class="tap btn cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui.print)}</button>
-      <button class="tap btn theme-toggle" type="button"
-        data-label-light={t(ui.themeLight)} data-label-dark={t(ui.themeDark)}>
-        <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">{t(ui.themeDark)}</span>
-      </button>
-    </div>
-
-    <nav class="toc" data-spy aria-label={lang === 'en' ? 'Sections' : 'Bagian'}>
-      <ol>
-        {sections.map((s, i) => (
-          <li><a class="tap" href={`#${s.id}`}><span class="n">{num(i)}</span>{s.label}</a></li>
-        ))}
-      </ol>
+<div class="wrap">
+  <header class="top" id="top">
+    <a class="brand" href="#main">{profile.name}</a>
+    <nav aria-label={lang === 'en' ? 'Main' : 'Utama'}>
+      <a href="#work">{t(nav.work)}</a>
+      <a href="#about">{t(nav.about)}</a>
+      <a href="#experience">{t(nav.experience)}</a>
+      <a href="#achievements">{t(nav.achievements)}</a>
+      <a href="#contact">{t(nav.contact)}</a>
     </nav>
+    <div class="tools">
+      <a class="chip tap" href={otherHref} hreflang={otherLang} lang={otherLang}>{otherLang.toUpperCase()}<span class="sr"> {t(ui2.switchLang)}</span></a>
+      <button class="chip tap theme-toggle" type="button" data-label-light={t(ui.themeLight)} data-label-dark={t(ui.themeDark)}>
+        <span class="theme-text">{t(ui.themeDark)}</span>
+      </button>
+      <button class="chip tap cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui2.download)}</button>
+    </div>
   </header>
 
-  <main id="main" class="main">
-    <section id="summary" aria-labelledby="h-summary">
-      <h2 id="h-summary"><span class="n">{n('summary')}</span>{t(ui.summary)}</h2>
-      {summary.map((p) => <p class="lead">{t(p)}</p>)}
-    </section>
+  <nav class="rail" data-spy aria-label={t(ui2.sections)}>
+    <ol>
+      {rail.map((r) => (
+        <li><a class="tap" href={`#${r.id}`}>{lang === 'en' ? r.en : r.id_}</a></li>
+      ))}
+    </ol>
+  </nav>
 
-    <section id="approach" aria-labelledby="h-approach">
-      <h2 id="h-approach"><span class="n">{n('approach')}</span>{t(ui.approach)}</h2>
-      <ol class="principles">
-        {approach.map((a) => (
-          <li>
-            <h3>{t(a.title)}</h3>
-            <p>{t(a.body)}</p>
-          </li>
-        ))}
-      </ol>
-    </section>
-
-    <section id="experience" aria-labelledby="h-experience">
-      <h2 id="h-experience"><span class="n">{n('experience')}</span>{t(ui.experience)}</h2>
-      <article class="job">
-        <div class="job-head">
-          <h3>{t(experience.title)}</h3>
-          <p class="meta">
-            <span>{experience.company}</span>
-            <span>{t(experience.period.from)} – {t(ui.present)} · {t(experience.place)}</span>
-          </p>
+  <main id="main">
+    <section class="hero" aria-labelledby="name">
+      <p class="avail">{t(availability)}</p>
+      <h1 class="name" id="name">
+        <span class="line"><span>{nameParts[0]}</span></span>
+        <span class="line"><span>{nameParts.slice(1).join(' ')}</span></span>
+      </h1>
+      <p class="typed" aria-hidden="true"><span id="typedText">{phrases[lang][0]}</span><span class="caret"></span></p>
+      <p class="sr">{t(tagline)}</p>
+      <div class="hero-row">
+        <div>
+          <p class="intro">{t(heroIntro)}</p>
+          <p class="hero-tags"><span>{t(profile.role)}</span><span>{t(profile.focus)}</span><span>{t(profile.membership)}</span></p>
         </div>
-        <ul class="bullets">
-          {experience.bullets.map((b) => <li>{t(b)}</li>)}
-        </ul>
-      </article>
+        <div><a class="link" href="#work">{t(ui2.seeWork)}</a></div>
+      </div>
     </section>
 
-    <section id="achievements" aria-labelledby="h-achievements">
-      <h2 id="h-achievements"><span class="n">{n('achievements')}</span>{t(ui.achievements)}</h2>
-      <ul class="awards">
-        {achievements.map((a) => (
-          <li>
-            <p class="year">{t(a.date)}</p>
-            <div>
-              <h3>{t(a.title)}</h3>
-              <p class="client">{t(a.event)}</p>
-              <p class="detail">{t(a.detail)}</p>
-              {a.link && (
-                <p class="ext"><a class="tap" href={a.link.href} rel="noopener" target="_blank">{t(a.link.label)} ↗</a></p>
-              )}
-              {a.photos && (
-                <ul class="photos">
-                  {a.photos.map((p) => (
-                    <li>
-                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener">
-                        <img
-                          src={`/img/${p.base}-800.webp`}
-                          srcset={`/img/${p.base}-800.webp 800w, /img/${p.base}-1600.webp 1600w`}
-                          sizes="(min-width: 960px) 330px, (min-width: 480px) 45vw, 100vw"
-                          width={p.w} height={p.h}
-                          style={p.pos ? `object-position: ${p.pos}` : undefined}
-                          alt={t(p.alt)}
-                          loading="lazy" decoding="async"
-                        />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </li>
+    <section class="s" id="about" aria-labelledby="h-about">
+      <h2 class="reveal" id="h-about">{t(nav.about)}</h2>
+      <p class="statement reveal">{t(aboutStatement)}</p>
+      <div class="cols reveal">
+        {aboutCols.map((c) => <p set:html={t(c)} />)}
+      </div>
+    </section>
+
+    <section class="s" id="do" aria-labelledby="h-do">
+      <h2 class="reveal" id="h-do">{t(ui2.whatIDo)}</h2>
+      <div class="trio reveal">
+        {whatIDo.map((w) => (
+          <div>
+            <h3>{t(w.title)}</h3>
+            <p>{t(w.body)}</p>
+            <p class="stack">{w.stack}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
 
-    <section id="projects" aria-labelledby="h-projects">
-      <h2 id="h-projects"><span class="n">{n('projects')}</span>{t(ui.projects)}</h2>
-      <p class="intro">{t(ui.projectsIntro).replace('17', String(projectCount))}</p>
+    <section class="s" id="experience" aria-labelledby="h-experience">
+      <h2 class="reveal" id="h-experience">{t(nav.experience)}</h2>
+      <div class="list reveal">
+        <article class="item">
+          <div class="meta">{experience.company}<br />{t(experience.period.from)} – {t(ui.present)}<br />{t(experience.place)}</div>
+          <div>
+            <h3>{t(experience.title)}</h3>
+            <ul>{experience.bullets.map((b) => <li>{t(b)}</li>)}</ul>
+            <p class="stack">Playwright, TypeScript, Postman, JMeter, SQL, Jira, Kiwi TCMS</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="s" id="work" aria-labelledby="h-work">
+      <h2 class="reveal" id="h-work">{t(ui2.work)}</h2>
+      <p class="statement reveal">{t(ui.projectsIntro).replace('17', String(projectCount))}</p>
       {projectGroups.map((g) => (
-        <div class="group">
+        <div class="group reveal">
           <h3 class="group-title">{t(g.domain)}</h3>
-          <ul class="ledger">
+          <div class="list">
             {g.items.map((p) => (
-              <li class="row">
-                <div class="row-head">
-                  <h4>{p.name}</h4>
-                  <p class="client">{t(p.client)}</p>
-                  {p.ongoing && <p class="status">{t(ui.ongoing)}</p>}
-                </div>
-                <div class="row-body">
+              <article class="item project">
+                <div class="meta">{t(p.client)}{p.ongoing && <span class="badge">{t(ui.ongoing)}</span>}</div>
+                <div>
+                  <h3>{p.name}</h3>
                   <p>{t(p.body)}</p>
-                  <ul class="tags" aria-label={lang === 'en' ? 'Testing types' : 'Jenis pengujian'}>
-                    {p.tags.map((tag) => <li>{tag}</li>)}
-                  </ul>
+                  <p class="stack">{p.tags.join(', ')}</p>
                 </div>
-              </li>
+              </article>
             ))}
-          </ul>
+          </div>
         </div>
       ))}
     </section>
 
-    <section id="grc" aria-labelledby="h-grc">
-      <h2 id="h-grc"><span class="n">{n('grc')}</span>{t(ui.grc)}</h2>
-      <p class="intro">{t(ui.grcIntro)}</p>
-      <ul class="ledger">
-        {grcCases.map((c) => (
-          <li class="row case">
-            <div class="row-head">
-              <h3 class="case-title">{t(c.title)}</h3>
-              <p class="client">{t(c.context)}</p>
+    <section class="s" id="research" aria-labelledby="h-research">
+      <h2 class="reveal" id="h-research">{t(ui2.research)}</h2>
+      <div class="list reveal">
+        {research.map((r) => (
+          <article class="item">
+            <div class="meta">{t(r.meta)}</div>
+            <div>
+              <h3>{t(r.title)}</h3>
+              <p>{t(r.body)}</p>
+              <p class="stack">{r.stack}</p>
             </div>
-            <div class="row-body">
-              <ul class="bullets tight">
-                {c.bullets.map((b) => <li>{t(b)}</li>)}
-              </ul>
-              <ul class="tags" aria-label="Frameworks">
-                {c.framework.split(' · ').map((f) => <li>{f}</li>)}
-              </ul>
-            </div>
-          </li>
+          </article>
         ))}
-      </ul>
+        {grcCases.map((c) => (
+          <article class="item grc-case">
+            <div class="meta">{t(c.context)}</div>
+            <div>
+              <h3>{t(c.title)}</h3>
+              <ul>{c.bullets.map((b) => <li>{t(b)}</li>)}</ul>
+              <p class="stack">{c.framework.replaceAll(' · ', ', ')}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="note reveal">{t(ui.grcIntro)}</p>
     </section>
 
-    <section id="skills" aria-labelledby="h-skills">
-      <h2 id="h-skills"><span class="n">{n('skills')}</span>{t(ui.skills)}</h2>
-      <dl class="skills">
-        {skills.map((s) => (
+    <section class="s" id="leadership" aria-labelledby="h-leadership">
+      <h2 class="reveal" id="h-leadership">{t(ui2.leadership)}</h2>
+      <div class="list reveal">
+        {idlsLead && (
+          <article class="item">
+            <div class="meta">Indonesia Digital Leadership Summit, 2026</div>
+            <div>
+              <h3>{t(idlsLead.title)}</h3>
+              <p>{t(idlsLead.detail)}</p>
+              {idlsLead.link && <p><a class="link small" href={idlsLead.link.href} rel="noopener" target="_blank">{t(idlsLead.link.label)}</a></p>}
+            </div>
+          </article>
+        )}
+        {leadership.map((l) => (
+          <article class="item">
+            <div class="meta">{t(l.meta)}</div>
+            <div>
+              <h3>{t(l.title)}</h3>
+              <p>{t(l.body)}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="s" id="achievements" aria-labelledby="h-achievements">
+      <h2 class="reveal" id="h-achievements">{t(nav.achievements)}</h2>
+      <div class="list reveal">
+        {awards.map((a) => (
+          <article class="item award">
+            <div class="meta">{t(a.date)}</div>
+            <div>
+              <h3>{t(a.title)}</h3>
+              <p class="event">{t(a.event)}</p>
+              <p>{t(a.detail)}</p>
+              {a.link && <p><a class="link small" href={a.link.href} rel="noopener" target="_blank">{t(a.link.label)}</a></p>}
+              {a.photos && (
+                <div class="shots">
+                  {a.photos.map((p) => (
+                    <figure class="shot">
+                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener">
+                        <img
+                          src={`/img/${p.base}-800.webp`}
+                          srcset={`/img/${p.base}-800.webp 800w, /img/${p.base}-1600.webp 1600w`}
+                          sizes="(min-width: 900px) 340px, 90vw"
+                          width={p.w} height={p.h} alt={t(p.alt)} loading="lazy" decoding="async"
+                          style={p.pos ? `object-position: ${p.pos}` : undefined}
+                        />
+                      </a>
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="s" id="education" aria-labelledby="h-education">
+      <h2 class="reveal" id="h-education">{t(ui.education)}</h2>
+      <div class="list reveal">
+        {education.map((e) => (
+          <article class="item">
+            <div class="meta">{e.school}</div>
+            <div>
+              <h3>{t(e.degree)}</h3>
+              <p>{t(e.period)}{e.note ? ` · ${t(e.note)}` : ''}</p>
+            </div>
+          </article>
+        ))}
+        <article class="item">
+          <div class="meta">{t(training.meta)}</div>
           <div>
-            <dt>{t(s.group)}</dt>
-            <dd>{s.items}</dd>
+            <h3>{t(training.title)}</h3>
+            <p>{t(training.body)}</p>
+          </div>
+        </article>
+        <article class="item">
+          <div class="meta">{t(ui.languages)}</div>
+          <div><p>{languages.map((l) => t(l)).join(' · ')}</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="s" id="skills" aria-labelledby="h-skills">
+      <h2 class="reveal" id="h-skills">{t(ui.skills)}</h2>
+      <div class="list reveal">
+        {skills.map((s) => (
+          <div class="item skill">
+            <div class="meta">{t(s.group)}</div>
+            <div><p>{s.items}</p></div>
           </div>
         ))}
-      </dl>
+      </div>
     </section>
 
-    <section id="education" aria-labelledby="h-education">
-      <h2 id="h-education"><span class="n">{n('education')}</span>{t(ui.education)}</h2>
-      <ul class="edu">
-        {education.map((e) => (
+    <section class="s" id="contact" aria-labelledby="h-contact">
+      <h2 class="reveal" id="h-contact">{t(nav.contact)}</h2>
+      <div class="reveal">
+        <p class="statement">{t(contactStatement)}</p>
+        <ul class="contact-list">
           <li>
-            <h3>{t(e.degree)}</h3>
-            <p class="meta"><span>{e.school}</span><span>{t(e.period)}</span></p>
-            {e.note && <p class="note">{t(e.note)}</p>}
+            <span>Email</span>
+            <span class="val">
+              <a class="tap" href={mailHref}>{profile.email}</a>
+              <button class="copy tap" type="button" data-copy={profile.email} data-done={t(ui2.copied)}>{t(ui2.copy)}</button>
+            </span>
           </li>
-        ))}
-      </ul>
-      <h3 class="sub">{t(ui.languages)}</h3>
-      <p>{languages.map((l) => t(l)).join(' · ')}</p>
+          <li>
+            <span>WhatsApp</span>
+            <span class="val"><a class="tap" href={waHref} rel="noopener" target="_blank">{profile.phone}</a></span>
+          </li>
+          <li>
+            <span>LinkedIn</span>
+            <span class="val"><a class="tap" href={profile.linkedin} rel="me noopener" target="_blank">linkedin.com/in/rifki-hidayatullah</a></span>
+          </li>
+          <li>
+            <span>CV</span>
+            <span class="val"><button class="chip tap cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui2.download)}</button></span>
+          </li>
+        </ul>
+      </div>
     </section>
-
-    <footer class="foot">
-      <p>{t(ui.footer)}</p>
-      <noscript>
-        <p class="cv-fallback">{t(d.title)}:
-          <a href={`/cv/${fileName('qa', 'en')}`} download>QA EN</a> ·
-          <a href={`/cv/${fileName('qa', 'id')}`} download>QA ID</a> ·
-          <a href={`/cv/${fileName('grc', 'en')}`} download>GRC EN</a> ·
-          <a href={`/cv/${fileName('grc', 'id')}`} download>GRC ID</a>
-        </p>
-      </noscript>
-    </footer>
   </main>
+
+  <footer>
+    <span>{profile.name}, {t(profile.location).split(',')[0]}</span>
+    <span>{t(ui2.updated)}</span>
+  </footer>
 </div>
 
-<dialog id="cv-dialog" class="cv-dialog" aria-labelledby="cvd-title" aria-describedby="cvd-intro">
-  <form method="dialog" class="cvd-form">
-    <div class="cvd-head">
-      <h2 id="cvd-title">{t(d.title)}</h2>
-      <button class="tap cvd-x" value="cancel" aria-label={t(d.close)}>×</button>
-    </div>
-    <p id="cvd-intro" class="cvd-intro">{t(d.intro)}</p>
+<a class="to-top tap" href="#top" aria-label={t(ui2.toTop)}><span aria-hidden="true">&uarr;</span></a>
 
-    <fieldset>
-      <legend><span class="cvd-step">1</span>{t(d.step1)}</legend>
-      <div class="cvd-row">
-        <label class="cvd-opt tap"><input type="radio" name="cv-lang" value="en" checked={lang === 'en'} /> English</label>
-        <label class="cvd-opt tap"><input type="radio" name="cv-lang" value="id" checked={lang === 'id'} /> Bahasa Indonesia</label>
-      </div>
-    </fieldset>
+<DownloadDialog lang={lang} />
 
-    <fieldset>
-      <legend><span class="cvd-step">2</span>{t(d.step2)}</legend>
-      <label class="cvd-opt cvd-card tap">
-        <input type="radio" name="cv-track" value="qa" checked />
-        <span><strong>{t(d.qaTitle)}</strong><small>{t(d.qaDesc)}</small></span>
-      </label>
-      <label class="cvd-opt cvd-card tap">
-        <input type="radio" name="cv-track" value="grc" />
-        <span><strong>{t(d.grcTitle)}</strong><small>{t(d.grcDesc)}</small></span>
-      </label>
-    </fieldset>
-
-    <p class="cvd-file" aria-live="polite">{t(d.file)}: <code class="cvd-name">{fileName('qa', lang)}</code></p>
-
-    <div class="cvd-actions">
-      <button class="tap btn" value="cancel">{t(d.cancel)}</button>
-      <a class="tap btn btn-primary cvd-download" href={`/cv/${fileName('qa', lang)}`} download type="application/pdf">{t(d.download)}</a>
-    </div>
-  </form>
-</dialog>
-
-<script is:inline>
+<script is:inline define:vars={{ list: phrases[lang] }}>
   (function () {
-    var dlg = document.getElementById('cv-dialog');
-    var openBtn = document.querySelector('.cv-open');
-    if (!dlg || !openBtn || typeof dlg.showModal !== 'function') return;
-    var link = dlg.querySelector('.cvd-download');
-    var nameEl = dlg.querySelector('.cvd-name');
-    function pick(name) { var el = dlg.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
-    function update() {
-      var file = 'Rifki-Hidayatullah-CV-' + pick('cv-track').toUpperCase() + '-' + pick('cv-lang').toUpperCase() + '.pdf';
-      link.href = '/cv/' + file;
-      nameEl.textContent = file;
+    var root = document.documentElement;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Name reveal and section reveal. Without JS or with reduced motion everything is shown at once.
+    root.classList.add('js');
+    requestAnimationFrame(function () { root.classList.add('loaded'); });
+    var items = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      items.forEach(function (el) { io.observe(el); });
     }
-    dlg.addEventListener('change', update);
-    openBtn.addEventListener('click', function () { update(); dlg.showModal(); });
-    // Close when the backdrop is clicked.
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-    // Let the download start, then close.
-    link.addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 0); });
-    dlg.addEventListener('close', function () { openBtn.focus(); });
-  })();
-</script>
-<script is:inline>
-  // Section spy: marks the table-of-contents link of the section being read (aria-current).
-  // A clicked link stays marked until the visitor scrolls again, so a short section near the
-  // end of the page (Skills) is not overruled by the last section.
-  (function () {
+
+    // Typing line. Reduced motion keeps the first phrase static.
+    var el = document.getElementById('typedText');
+    if (el && !reduce) {
+      var i = 0, pos = list[0].length, deleting = true;
+      var tick = function () {
+        var word = list[i];
+        if (deleting) {
+          pos--; el.textContent = word.slice(0, pos);
+          if (pos <= 0) { deleting = false; i = (i + 1) % list.length; }
+          setTimeout(tick, 28);
+        } else {
+          word = list[i]; pos++; el.textContent = word.slice(0, pos);
+          if (pos >= word.length) { deleting = true; setTimeout(tick, 2400); } else { setTimeout(tick, 55); }
+        }
+      };
+      setTimeout(tick, 2600);
+    }
+
+    // Copy email.
+    document.querySelectorAll('.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var text = btn.getAttribute('data-copy');
+        var old = btn.textContent;
+        var done = function () { btn.textContent = btn.getAttribute('data-done'); setTimeout(function () { btn.textContent = old; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(function () {});
+      });
+    });
+
+    // Section menu on the right: marks the section being read (aria-current). A clicked link
+    // stays marked until the visitor scrolls again, so a short section near the end (Skills)
+    // is not overruled by the last one.
     var links = Array.prototype.slice.call(document.querySelectorAll('[data-spy] a[href^="#"]'));
-    if (!links.length) return;
     var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+    var toTop = document.querySelector('.to-top');
     var pinned = null, ticking = false;
-    function set(id) {
+    var setActive = function (id) {
       links.forEach(function (a) {
         if (id && a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'location');
         else a.removeAttribute('aria-current');
       });
-    }
-    function compute() {
+    };
+    var compute = function () {
       ticking = false;
-      if (pinned) return;
+      if (toTop) toTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+      if (pinned || !secs.length) return;
       var line = window.innerHeight * 0.3, cur = null;
       secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id; });
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) cur = secs[secs.length - 1].id;
-      set(cur);
-    }
-    function unpin() { if (pinned) { pinned = null; compute(); } }
+      setActive(cur);
+    };
+    var unpin = function () { if (pinned) { pinned = null; compute(); } };
     window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(compute); } }, { passive: true });
     window.addEventListener('resize', compute);
     ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, unpin, { passive: true }); });
     links.forEach(function (a) {
-      a.addEventListener('click', function () { pinned = a.getAttribute('href').slice(1); set(pinned); });
+      a.addEventListener('click', function () { pinned = a.getAttribute('href').slice(1); setActive(pinned); });
     });
     var hash = location.hash.slice(1);
-    if (hash && secs.some(function (s) { return s.id === hash; })) { pinned = hash; set(hash); } else compute();
+    if (hash && secs.some(function (s) { return s.id === hash; })) { pinned = hash; setActive(hash); }
+    compute();
+
+    // Back to top: after the jump, keyboard focus starts again at the top of the page.
+    // The default anchor jump would move focus itself, so the scroll is done here instead.
+    if (toTop) toTop.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      var brand = document.querySelector('.top .brand');
+      if (brand) brand.focus({ preventScroll: true });
+    });
   })();
 </script>

@@ -333,6 +333,7 @@ export const projectGroups: ProjectGroup[] = [
 // pos is the CSS object-position for the cropped thumbnail. The full photo opens uncropped.
 export type Photo = { base: string; w: number; h: number; alt: T; pos?: string };
 export type Achievement = {
+  group?: 'leadership';
   title: T;
   event: T;
   date: T;
@@ -365,6 +366,7 @@ export const achievements: Achievement[] = [
     ],
   },
   {
+    group: 'leadership',
     title: { en: 'Head of Event Division, IDLS 2026 organising committee', id: 'Ketua Divisi Acara, panitia IDLS 2026' },
     event: {
       en: 'Indonesia Digital Leadership Summit (IDLS) 2026, Master of Information Technology, Faculty of Computer Science, Universitas Indonesia',

@@ -1,11 +1,15 @@
 # rfiki17.github.io
 
-Personal CV site of Rifki Hidayatullah, QA / Software Test Engineer. English at `/`, Indonesian at `/id/`.
+Personal CV site of Rifki Hidayatullah in the style of the first version (Archivo, warm brown accent, big type, ruled sections), with the current CV content. English at `/`, Indonesian at `/id/`.
+
+Live at https://rfiki17.github.io since 22 Nov 2026 (v2). Earlier versions are kept as git tags: `v1-legacy` (the first single-file page) and `v1-astro` (the Astro site with a sidebar layout).
+
+Extra v2 content (hero, about, what I do, research, leadership, training, prefilled contact messages) lives in `src/data/v2.ts`. The CV facts stay in `src/data/cv.ts` and the PDF content in `src/data/cv-print.ts`.
 
 ## Stack
 
-- [Astro](https://astro.build) static site, zero client framework. The only script is the theme switch.
-- IBM Plex Sans, Serif and Mono, self-hosted through Fontsource (no third-party font requests).
+- [Astro](https://astro.build) static site, zero client framework. Small inline scripts handle the theme switch, the reveal and typing animations (off with reduced motion), the section menu on the right from 1200 px, the back-to-top button below 1200 px, email copy and the download dialog.
+- Archivo variable font (width and weight axes) self-hosted through Fontsource for the site, IBM Plex Sans for the ATS PDFs. No third-party font requests.
 - Light and dark theme. The OS setting decides until the visitor presses the theme button, then the choice is kept in `localStorage`. Print stylesheet for a one-column PDF.
 - Photos in `public/img/` are resized WebP files with metadata stripped.
 
@@ -21,6 +25,7 @@ npx playwright install chromium firefox webkit
 npm run dev           # dev server, the PDF links return 404 in dev mode
 npm run build         # site + PDFs in dist/, fails if a PDF is over 2 pages
 npm run build:site    # site only, no PDFs
+npx astro preview --port 4400   # view the built site with working PDF downloads
 ```
 
 ## CV PDF
@@ -31,7 +36,7 @@ The Download CV button opens a two-step dialog: 1. language (English or Bahasa I
 
 ## Tests
 
-`npm test` builds the site and runs Playwright on six profiles (320 px phone, Pixel 7, iPhone 14, iPad Mini portrait, 1024 px laptop, 1440 px Firefox desktop). Checks per page:
+`npm test` builds the site, serves `dist/` on port 4401 with `scripts/serve.mjs` (so it never clashes with a running preview) and runs Playwright with reduced motion on six profiles (320 px phone, Pixel 7, iPhone 14, iPad Mini portrait, 1024 px laptop, 1440 px Firefox desktop). Checks per page:
 
 - no horizontal scroll
 - body text at least 16 px
