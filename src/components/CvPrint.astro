@@ -1,0 +1,126 @@
+---
+// ATS-friendly 2-page CV, used only to generate the PDFs (scripts/build-pdf.mjs).
+// Two tracks: "qa" (QA / Software Test Engineer) and "grc" (IT Governance, Risk and Compliance).
+// Rules: one column, standard section names, plain text separators, dates inline, black on white.
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '../styles/print.css';
+import { profile, experience, grcCases, skills, education, languages, type Lang } from '../data/cv';
+import {
+  printSummary, printExperienceBullets, printProjects, printAchievements, printUi,
+  grcHeadline, grcSummary, grcCompetencies, grcExperienceBullets, grcExtraBullet, grcProjects, type Track,
+} from '../data/cv-print';
+
+interface Props { lang: Lang; track: Track }
+const { lang, track } = Astro.props;
+const t = (x: { en: string; id: string }) => x[lang];
+const siteUrl = lang === 'en' ? 'rfiki17.github.io' : 'rfiki17.github.io/id/';
+const linkedinShort = profile.linkedin.replace('https://www.', '');
+const h = printUi.headings;
+const isGrc = track === 'grc';
+
+const headline = isGrc ? t(grcHeadline) : `${t(profile.role)} | ${t(profile.focus)}`;
+const summary = isGrc ? t(grcSummary) : t(printSummary);
+const bullets = (isGrc ? grcExperienceBullets : printExperienceBullets).map((i) => t(experience.bullets[i]));
+if (isGrc) bullets.push(t(grcExtraBullet));
+const projects = isGrc ? grcProjects : printProjects;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{`${profile.name} CV ${track.toUpperCase()} ${lang.toUpperCase()}`}</title>
+  </head>
+  <body data-track={track}>
+    <header>
+      <h1>{profile.name}</h1>
+      <p class="headline">{headline}</p>
+      <p class="contact">
+        {t(profile.location)} | <a href={profile.phoneHref}>{profile.phone}</a> (WhatsApp) | <a href={`mailto:${profile.email}`}>{profile.email}</a> | <a href={profile.linkedin}>{linkedinShort}</a> | <a href={`https://${siteUrl}`}>{siteUrl}</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>{t(h.summary)}</h2>
+      <p>{summary}</p>
+    </section>
+
+    {isGrc ? (
+      <>
+        <section>
+          <h2>{t(printUi.competencies)}</h2>
+          <ul class="plain">
+            {grcCompetencies.map((c) => <li><strong>{t(c.group)}:</strong> {t(c.items)}</li>)}
+          </ul>
+        </section>
+        <section>
+          <h2>{t(printUi.grcProjects)}</h2>
+          {grcCases.map((c) => (
+            <div class="entry">
+              <h3>{t(c.title)}</h3>
+              <p class="sub">{t(c.context)} | {c.framework.replaceAll(' · ', ', ')}</p>
+              <ul class="bullets">{c.bullets.map((b) => <li>{t(b)}</li>)}</ul>
+            </div>
+          ))}
+        </section>
+      </>
+    ) : (
+      <section>
+        <h2>{t(h.skills)}</h2>
+        <ul class="plain">
+          {skills.map((s) => <li><strong>{t(s.group)}:</strong> {s.items}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2>{t(h.experience)}</h2>
+      <h3>{t(experience.title)}</h3>
+      <p class="sub">{experience.company}, {t(experience.place)} | {t(experience.period.from)} – {t(printUi.present)}</p>
+      <ul class="bullets">
+        {bullets.map((b) => <li>{b}</li>)}
+      </ul>
+      <h4>{isGrc ? t(printUi.relevantProjects) : t(h.keyProjects)}</h4>
+      <ul class="bullets">
+        {projects.map((p) => <li><strong>{p.name}</strong> ({t(p.client)}): {t(p.line)}</li>)}
+      </ul>
+      {!isGrc && <p class="note">{t(printUi.allProjects)}</p>}
+    </section>
+
+    <section>
+      <h2>{t(h.education)}</h2>
+      {education.map((e) => (
+        <div class="edu">
+          <h3>{t(e.degree)}, {e.school}</h3>
+          <p class="sub">{t(e.period)}{e.note ? ` | ${t(e.note)}` : ''}</p>
+        </div>
+      ))}
+    </section>
+
+    {!isGrc && (
+      <section>
+        <h2>{t(h.grc)}</h2>
+        <ul class="bullets">
+          {grcCases.map((c) => <li><strong>{t(c.title)}</strong> | {c.framework.replaceAll(' · ', ', ')} | {t(c.context)}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2>{t(h.awards)}</h2>
+      <ul class="bullets">
+        {printAchievements.map((a) => <li><strong>{t(a.title)}</strong>: {t(a.where)} | {t(a.date)}</li>)}
+      </ul>
+    </section>
+
+    <section>
+      <h2>{t(h.more)}</h2>
+      <ul class="plain">
+        <li><strong>{t(h.membership)}:</strong> {t(profile.membership)}</li>
+        <li><strong>{t(h.languages)}:</strong> {languages.map((l) => t(l)).join(', ')}</li>
+      </ul>
+    </section>
+  </body>
+</html>

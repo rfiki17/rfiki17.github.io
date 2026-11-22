@@ -1,0 +1,93 @@
+---
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-serif/500.css';
+import '@fontsource/ibm-plex-serif/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import { profile, type Lang } from '../data/cv';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+}
+const { lang, title, description } = Astro.props;
+const site = Astro.site ?? new URL('https://rfiki17.github.io');
+const enUrl = new URL('/', site).href;
+const idUrl = new URL('/id/', site).href;
+const canonical = lang === 'en' ? enUrl : idUrl;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: profile.role.en,
+  worksFor: { '@type': 'Organization', name: 'PT Aero Systems Indonesia' },
+  address: { '@type': 'PostalAddress', addressLocality: 'South Tangerang', addressCountry: 'ID' },
+  memberOf: { '@type': 'Organization', name: 'ISACA Indonesia Chapter' },
+  knowsAbout: ['Software testing', 'Test automation', 'IT governance', 'Risk management', 'Compliance'],
+  email: `mailto:${profile.email}`,
+  telephone: profile.phone,
+  sameAs: [profile.linkedin],
+  url: canonical,
+};
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="id" href={idUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'id_ID'} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>
+      // Apply a saved theme before first paint. No saved choice means the OS setting decides.
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        var btn = document.querySelector('.theme-toggle');
+        if (!btn) return;
+        function current() { return root.dataset.theme || (mq.matches ? 'dark' : 'light'); }
+        function render() {
+          // The button names the theme it switches to.
+          var next = current() === 'dark' ? 'light' : 'dark';
+          var label = btn.getAttribute(next === 'dark' ? 'data-label-dark' : 'data-label-light');
+          btn.querySelector('.theme-text').textContent = label;
+          btn.dataset.next = next;
+        }
+        btn.addEventListener('click', function () {
+          var next = current() === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          render();
+        });
+        mq.addEventListener('change', render);
+        render();
+      })();
+    </script>
+  </body>
+</html>
