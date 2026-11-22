@@ -148,7 +148,8 @@ export const experience = {
   ] as T[],
 };
 
-export type Project = { name: string; client: T; body: T; tags: string[]; ongoing?: boolean };
+// featured: shown in full on the site. The others sit behind "Show more projects".
+export type Project = { name: string; client: T; body: T; tags: string[]; ongoing?: boolean; featured?: boolean };
 export type ProjectGroup = { domain: T; items: Project[] };
 
 export const projectGroups: ProjectGroup[] = [
@@ -157,6 +158,7 @@ export const projectGroups: ProjectGroup[] = [
     items: [
       {
         name: 'B2B Agent Platform',
+        featured: true,
         client: { en: 'Garuda Indonesia and Citilink', id: 'Garuda Indonesia dan Citilink' },
         body: {
           en: 'End-to-end booking journeys for travel agents: search, booking, payment and ticketing. Fare and business rule validation, and integration with inventory, payment gateway and issuance. Automated a middleware regression suite up to PNR hold and a responsive suite across phone, tablet and desktop profiles.',
@@ -225,6 +227,7 @@ export const projectGroups: ProjectGroup[] = [
     items: [
       {
         name: 'Aerotrans Transport Management System',
+        featured: true,
         client: { en: 'Aerotrans, web and mobile (Android, iOS)', id: 'Aerotrans, web dan mobile (Android, iOS)' },
         body: {
           en: 'Crew transport and fleet monitoring: real-time tracking, pickup and drop-off trips with complex status logic, maintenance scheduling and reporting. Automated regression suite in CI and a JMeter load test.',
@@ -258,6 +261,7 @@ export const projectGroups: ProjectGroup[] = [
     items: [
       {
         name: 'E-Procurement',
+        featured: true,
         client: { en: 'ACS / Aerofood', id: 'ACS / Aerofood' },
         body: {
           en: 'Request-to-order reliability: approval rules, data completeness and workflow integrity. Automated the chain from purchase requisition through sourcing, workplan approval and vendor bidding to winner announcement, across staff, approver and vendor portals.',
@@ -285,6 +289,7 @@ export const projectGroups: ProjectGroup[] = [
       },
       {
         name: 'ADAMS Smart Document',
+        featured: true,
         client: { en: 'AI document management platform', id: 'Platform manajemen dokumen berbasis AI' },
         body: {
           en: 'Document management with AI search, OCR, approval and e-signature, contract lifecycle and meeting notes. Read and write regression with cleanup, role and access checks, and a compatibility suite on desktop browsers, phones and tablets.',

@@ -5,9 +5,10 @@ import {
 } from '../data/cv';
 import {
   availability, phrases, tagline, heroIntro, aboutStatement, aboutCols, whatIDo, research, leadership,
-  certHighlights, certGroups, certUi, contactStatement, messages, nav, ui2, rail,
+  certHighlights, certGroups, certUi, contactStatement, messages, nav, ui2, rail, heroStats, views, ui3,
 } from '../data/v2';
 import DownloadDialog from './DownloadDialog.astro';
+import ShareDialog from './ShareDialog.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -21,16 +22,28 @@ const m = messages[lang];
 const mailHref = `mailto:${profile.email}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
 const waHref = `${profile.whatsappHref}?text=${encodeURIComponent(m.wa)}`;
 const nameParts = profile.name.split(' ');
+const featured = projectGroups.flatMap((g) => g.items.filter((p) => p.featured).map((p) => ({ ...p, domain: g.domain })));
+const restGroups = projectGroups.map((g) => ({ ...g, items: g.items.filter((p) => !p.featured) })).filter((g) => g.items.length);
+const restCount = restGroups.reduce((n, g) => n + g.items.length, 0);
+const shareIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>';
+// Build date for the footer, so "Updated" never goes stale.
+const updatedOn = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'id-ID', { month: 'long', year: 'numeric' }).format(new Date());
+const stats = [
+  { value: heroStats.years.value, label: t(heroStats.years.label) },
+  { value: String(projectCount), label: t(heroStats.systems.label) },
+  { value: heroStats.gama.value, label: t(heroStats.gama.label) },
+  { value: String(grcCases.length), label: t(heroStats.grc.label) },
+];
 ---
 <a class="skip" href="#main">{t(ui.skip)}</a>
 <div class="wrap">
   <header class="top" id="top">
     <a class="brand" href="#main">{profile.name}</a>
     <nav aria-label={lang === 'en' ? 'Main' : 'Utama'}>
-      <a href="#work">{t(nav.work)}</a>
       <a href="#about">{t(nav.about)}</a>
-      <a href="#experience">{t(nav.experience)}</a>
       <a href="#achievements">{t(nav.achievements)}</a>
+      <a href="#experience">{t(nav.experience)}</a>
+      <a href="#work">{t(nav.work)}</a>
       <a href="#contact">{t(nav.contact)}</a>
     </nav>
     <div class="tools">
@@ -38,6 +51,7 @@ const nameParts = profile.name.split(' ');
       <button class="chip tap theme-toggle" type="button" data-label-light={t(ui.themeLight)} data-label-dark={t(ui.themeDark)}>
         <span class="theme-text">{t(ui.themeDark)}</span>
       </button>
+      <button class="chip tap share-open share-top" type="button" aria-haspopup="dialog" aria-controls="share-dialog"><Fragment set:html={shareIcon} /><span class="share-lbl">{t(ui3.share)}</span></button>
       <button class="chip tap cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui2.download)}</button>
     </div>
   </header>
@@ -45,7 +59,7 @@ const nameParts = profile.name.split(' ');
   <nav class="rail" data-spy aria-label={t(ui2.sections)}>
     <ol>
       {rail.map((r) => (
-        <li><a class="tap" href={`#${r.id}`}>{lang === 'en' ? r.en : r.id_}</a></li>
+        <li class={`nav-${r.id}`}><a class="tap" href={`#${r.id}`}>{lang === 'en' ? r.en : r.id_}</a></li>
       ))}
     </ol>
   </nav>
@@ -64,7 +78,23 @@ const nameParts = profile.name.split(' ');
           <p class="intro">{t(heroIntro)}</p>
           <p class="hero-tags"><span>{t(profile.role)}</span><span>{t(profile.focus)}</span><span>{t(profile.membership)}</span></p>
         </div>
-        <div><a class="link" href="#work">{t(ui2.seeWork)}</a></div>
+        <div class="hero-side">
+          <fieldset class="views">
+            <legend>{t(ui3.viewAs)}</legend>
+            <div class="views-row">
+              {views.map((v) => (
+                <label class="chip tap view-opt"><input type="radio" name="view" value={v.id} checked={v.id === 'all'} /><span>{t(v.label)}</span></label>
+              ))}
+            </div>
+            <p class="views-hint">{t(ui3.viewHint)}</p>
+          </fieldset>
+          <dl class="stats" aria-label={t(ui2.stats)}>
+            {stats.map((st) => (
+              <div class="stat"><dt>{st.value}</dt><dd>{st.label}</dd></div>
+            ))}
+          </dl>
+          <a class="link" href="#work">{t(ui2.seeWork)}</a>
+        </div>
       </div>
     </section>
 
@@ -82,6 +112,40 @@ const nameParts = profile.name.split(' ');
             {aboutCols.map((c) => <p set:html={t(c)} />)}
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="s" id="achievements" aria-labelledby="h-achievements">
+      <h2 class="reveal" id="h-achievements">{t(nav.achievements)}</h2>
+      <div class="list reveal">
+        {awards.map((a) => (
+          <article class="item award">
+            <div class="meta">{t(a.date)}</div>
+            <div>
+              <h3>{t(a.title)}</h3>
+              <p class="event">{t(a.event)}</p>
+              <p>{t(a.detail)}</p>
+              {a.link && <p><a class="link small" href={a.link.href} rel="noopener" target="_blank">{t(a.link.label)}</a></p>}
+              {a.photos && (
+                <div class="shots">
+                  {a.photos.map((p) => (
+                    <figure class="shot">
+                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener">
+                        <img
+                          src={`/img/${p.base}-800.webp`}
+                          srcset={`/img/${p.base}-800.webp 800w, /img/${p.base}-1600.webp 1600w`}
+                          sizes="(min-width: 900px) 340px, 90vw"
+                          width={p.w} height={p.h} alt={t(p.alt)} loading="lazy" decoding="async"
+                          style={p.pos ? `object-position: ${p.pos}` : undefined}
+                        />
+                      </a>
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 
@@ -115,23 +179,38 @@ const nameParts = profile.name.split(' ');
     <section class="s" id="work" aria-labelledby="h-work">
       <h2 class="reveal" id="h-work">{t(ui2.work)}</h2>
       <p class="statement reveal">{t(ui.projectsIntro).replace('17', String(projectCount))}</p>
-      {projectGroups.map((g) => (
-        <div class="group reveal">
-          <h3 class="group-title">{t(g.domain)}</h3>
-          <div class="list">
-            {g.items.map((p) => (
-              <article class="item project">
-                <div class="meta">{t(p.client)}{p.ongoing && <span class="badge">{t(ui.ongoing)}</span>}</div>
-                <div>
-                  <h3>{p.name}</h3>
-                  <p>{t(p.body)}</p>
-                  <p class="stack">{p.tags.join(', ')}</p>
-                </div>
-              </article>
-            ))}
+      <div class="list reveal featured">
+        {featured.map((p) => (
+          <article class="item project">
+            <div class="meta">{t(p.client)}<span class="domain">{t(p.domain)}</span>{p.ongoing && <span class="badge">{t(ui.ongoing)}</span>}</div>
+            <div>
+              <h3>{p.name}</h3>
+              <p>{t(p.body)}</p>
+              <p class="stack">{p.tags.join(', ')}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <details class="more-projects">
+        <summary class="chip tap">{t(ui3.moreProjects).replace('{n}', String(restCount))}</summary>
+        {restGroups.map((g) => (
+          <div class="group">
+            <h3 class="group-title">{t(g.domain)}</h3>
+            <div class="list">
+              {g.items.map((p) => (
+                <article class="item project">
+                  <div class="meta">{t(p.client)}{p.ongoing && <span class="badge">{t(ui.ongoing)}</span>}</div>
+                  <div>
+                    <h3>{p.name}</h3>
+                    <p>{t(p.body)}</p>
+                    <p class="stack">{p.tags.join(', ')}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </details>
     </section>
 
     <section class="s" id="research" aria-labelledby="h-research">
@@ -158,7 +237,7 @@ const nameParts = profile.name.split(' ');
           </article>
         ))}
       </div>
-      <p class="note reveal">{t(ui.grcIntro)}</p>
+      <p class="note reveal grc-note">{t(ui.grcIntro)}</p>
     </section>
 
     <section class="s" id="leadership" aria-labelledby="h-leadership">
@@ -184,40 +263,6 @@ const nameParts = profile.name.split(' ');
                 <ul class="links">
                   {l.links.map((k) => <li><a class="link small" href={k.href} rel="noopener" target="_blank">{t(k.label)}</a></li>)}
                 </ul>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="s" id="achievements" aria-labelledby="h-achievements">
-      <h2 class="reveal" id="h-achievements">{t(nav.achievements)}</h2>
-      <div class="list reveal">
-        {awards.map((a) => (
-          <article class="item award">
-            <div class="meta">{t(a.date)}</div>
-            <div>
-              <h3>{t(a.title)}</h3>
-              <p class="event">{t(a.event)}</p>
-              <p>{t(a.detail)}</p>
-              {a.link && <p><a class="link small" href={a.link.href} rel="noopener" target="_blank">{t(a.link.label)}</a></p>}
-              {a.photos && (
-                <div class="shots">
-                  {a.photos.map((p) => (
-                    <figure class="shot">
-                      <a href={`/img/${p.base}-1600.webp`} target="_blank" rel="noopener">
-                        <img
-                          src={`/img/${p.base}-800.webp`}
-                          srcset={`/img/${p.base}-800.webp 800w, /img/${p.base}-1600.webp 1600w`}
-                          sizes="(min-width: 900px) 340px, 90vw"
-                          width={p.w} height={p.h} alt={t(p.alt)} loading="lazy" decoding="async"
-                          style={p.pos ? `object-position: ${p.pos}` : undefined}
-                        />
-                      </a>
-                    </figure>
-                  ))}
-                </div>
               )}
             </div>
           </article>
@@ -318,6 +363,14 @@ const nameParts = profile.name.split(' ');
             <span class="val"><a class="tap" href={profile.linkedin} rel="me noopener" target="_blank">linkedin.com/in/rifki-hidayatullah</a></span>
           </li>
           <li>
+            <span>{t(ui3.contactCard)}</span>
+            <span class="val"><a class="tap" href="/rifki-hidayatullah.vcf" download>{t(ui3.saveContact)}</a></span>
+          </li>
+          <li>
+            <span>{t(ui3.share)}</span>
+            <span class="val"><button class="chip tap share-open" type="button" aria-haspopup="dialog" aria-controls="share-dialog"><Fragment set:html={shareIcon} />{t(ui3.share)}</button></span>
+          </li>
+          <li>
             <span>CV</span>
             <span class="val"><button class="chip tap cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui2.download)}</button></span>
           </li>
@@ -328,13 +381,49 @@ const nameParts = profile.name.split(' ');
 
   <footer>
     <span>{profile.name}, {t(profile.location).split(',')[0]}</span>
-    <span>{t(ui2.updated)}</span>
+    <span>{t(ui2.updated)} {updatedOn}</span>
   </footer>
 </div>
+
+<div class="minibar">
+  <div class="wrap minibar-in">
+    <a class="brand" href="#top">{profile.name}</a>
+    <div class="minibar-tools">
+      <button class="chip tap share-open share-icon" type="button" aria-haspopup="dialog" aria-controls="share-dialog" aria-label={t(ui3.share)}><Fragment set:html={shareIcon} /></button>
+      <button class="chip tap sheet-open" type="button" aria-haspopup="dialog" aria-controls="sections-sheet">{t(ui2.openSections)}</button>
+      <button class="chip chip-solid tap cv-open" type="button" aria-haspopup="dialog" aria-controls="cv-dialog">{t(ui2.download)}</button>
+    </div>
+  </div>
+</div>
+
+<dialog id="sections-sheet" class="sheet" aria-labelledby="sheet-title">
+  <div class="sheet-head">
+    <h2 id="sheet-title">{t(ui2.openSections)}</h2>
+    <button class="cvd-x tap sheet-close" type="button" aria-label={t(ui2.close)}>&times;</button>
+  </div>
+  <nav aria-labelledby="sheet-title" data-spy>
+    <ol>
+      {rail.map((r) => (
+        <li class={`nav-${r.id}`}><a class="tap" href={`#${r.id}`}>{lang === 'en' ? r.en : r.id_}</a></li>
+      ))}
+    </ol>
+  </nav>
+</dialog>
 
 <a class="to-top tap" href="#top" aria-label={t(ui2.toTop)}><span aria-hidden="true">&uarr;</span></a>
 
 <DownloadDialog lang={lang} />
+<ShareDialog lang={lang} />
+
+<dialog id="lightbox" class="lightbox" aria-label={t(ui3.photo)}>
+  <figure>
+    <img alt="" />
+    <figcaption></figcaption>
+  </figure>
+  <button class="lb-btn lb-prev tap" type="button" aria-label={t(ui3.prev)}>&lsaquo;</button>
+  <button class="lb-btn lb-next tap" type="button" aria-label={t(ui3.next)}>&rsaquo;</button>
+  <button class="lb-btn lb-close tap" type="button" aria-label={t(ui2.close)}>&times;</button>
+</dialog>
 
 <script is:inline define:vars={{ list: phrases[lang] }}>
   (function () {
@@ -388,6 +477,18 @@ const nameParts = profile.name.split(' ');
     var links = Array.prototype.slice.call(document.querySelectorAll('[data-spy] a[href^="#"]'));
     var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
     var toTop = document.querySelector('.to-top');
+    var minibar = document.querySelector('.minibar');
+    var hero = document.querySelector('.hero');
+
+    // Sections sheet (below 1200 px): all sections in a modal dialog.
+    var sheet = document.getElementById('sections-sheet');
+    var sheetBtn = document.querySelector('.sheet-open');
+    if (sheet && sheetBtn && typeof sheet.showModal === 'function') {
+      sheetBtn.addEventListener('click', function () { sheet.showModal(); });
+      sheet.querySelector('.sheet-close').addEventListener('click', function () { sheet.close(); });
+      sheet.addEventListener('click', function (e) { if (e.target === sheet) sheet.close(); });
+      sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { sheet.close(); }); });
+    }
     var pinned = null, ticking = false;
     var setActive = function (id) {
       links.forEach(function (a) {
@@ -398,6 +499,11 @@ const nameParts = profile.name.split(' ');
     var compute = function () {
       ticking = false;
       if (toTop) toTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+      if (minibar && hero) {
+        var past = hero.getBoundingClientRect().bottom < 0;
+        minibar.classList.toggle('show', past);
+        minibar.inert = !past;
+      }
       if (pinned || !secs.length) return;
       var line = window.innerHeight * 0.3, cur = null;
       secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id; });
@@ -414,6 +520,56 @@ const nameParts = profile.name.split(' ');
     var hash = location.hash.slice(1);
     if (hash && secs.some(function (s) { return s.id === hash; })) { pinned = hash; setActive(hash); }
     compute();
+
+    // View switch: all, QA or IT GRC. The head script in Base.astro applies the saved or linked view
+    // before first paint. Here the radios follow it and change it.
+    var radios = document.querySelectorAll('.views input[name="view"]');
+    var setView = function (v) {
+      root.setAttribute('data-view', v);
+      try { localStorage.setItem('view', v); } catch (e) {}
+      var url = new URL(location.href);
+      if (v === 'all') url.searchParams.delete('view'); else url.searchParams.set('view', v);
+      history.replaceState(null, '', url);
+      compute();
+    };
+    radios.forEach(function (r) {
+      r.checked = r.value === (root.getAttribute('data-view') || 'all');
+      r.addEventListener('change', function () { if (r.checked) setView(r.value); });
+    });
+
+    // Projects behind "Show more" and other collapsed lists print in full.
+    window.addEventListener('beforeprint', function () {
+      document.querySelectorAll('details').forEach(function (d) { d.setAttribute('data-was', d.open ? '1' : ''); d.open = true; });
+    });
+    window.addEventListener('afterprint', function () {
+      document.querySelectorAll('details[data-was]').forEach(function (d) { d.open = d.getAttribute('data-was') === '1'; d.removeAttribute('data-was'); });
+    });
+
+    // Photo viewer. Without JS the photo links still open the full image.
+    var lb = document.getElementById('lightbox');
+    var shots = Array.prototype.slice.call(document.querySelectorAll('.shot a'));
+    if (lb && shots.length && typeof lb.showModal === 'function') {
+      var lbImg = lb.querySelector('img'), lbCap = lb.querySelector('figcaption'), lbIdx = 0, lbOpener = null;
+      var show = function (i) {
+        lbIdx = (i + shots.length) % shots.length;
+        var a = shots[lbIdx], thumb = a.querySelector('img');
+        lbImg.src = a.getAttribute('href');
+        lbImg.alt = thumb ? thumb.alt : '';
+        lbCap.textContent = (thumb ? thumb.alt : '') + ' (' + (lbIdx + 1) + '/' + shots.length + ')';
+      };
+      shots.forEach(function (a, i) {
+        a.addEventListener('click', function (e) { e.preventDefault(); lbOpener = a; show(i); lb.showModal(); });
+      });
+      lb.querySelector('.lb-prev').addEventListener('click', function () { show(lbIdx - 1); });
+      lb.querySelector('.lb-next').addEventListener('click', function () { show(lbIdx + 1); });
+      lb.querySelector('.lb-close').addEventListener('click', function () { lb.close(); });
+      lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+      lb.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') show(lbIdx - 1);
+        if (e.key === 'ArrowRight') show(lbIdx + 1);
+      });
+      lb.addEventListener('close', function () { lbImg.removeAttribute('src'); if (lbOpener) lbOpener.focus(); });
+    }
 
     // Back to top: after the jump, keyboard focus starts again at the top of the page.
     // The default anchor jump would move focus itself, so the scroll is done here instead.

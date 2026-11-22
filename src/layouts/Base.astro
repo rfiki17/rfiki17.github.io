@@ -90,6 +90,14 @@ const jsonLd = {
         var saved = localStorage.getItem('theme');
         if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
       } catch (e) {}
+      // View (all, QA or IT GRC): a ?view= link wins over the saved choice and is kept, so the view
+      // stays when the visitor switches language.
+      try {
+        var linked = new URLSearchParams(location.search).get('view');
+        if (linked === 'all' || linked === 'qa' || linked === 'grc') localStorage.setItem('view', linked);
+        var v = linked || localStorage.getItem('view');
+        if (v === 'qa' || v === 'grc') document.documentElement.dataset.view = v;
+      } catch (e) {}
     </script>
   </head>
   <body>

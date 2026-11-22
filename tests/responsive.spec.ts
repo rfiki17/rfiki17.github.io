@@ -145,6 +145,51 @@ for (const p of pages) {
       await expect(btn).toBeHidden();
     });
 
+    test('hero shows four numbers taken from the data', async ({ page }) => {
+      const stats = page.locator('.hero .stats .stat');
+      await expect(stats).toHaveCount(4);
+      await expect(stats.locator('dt')).toHaveText(['3+', '17', 'Top 10', '5']);
+    });
+
+    test('achievements come right after About', async ({ page }) => {
+      const ids = await page.locator('main > section.s').evaluateAll((els) => els.map((e) => e.id));
+      expect(ids.slice(0, 3)).toEqual(['about', 'achievements', 'do']);
+    });
+
+    test('footer date comes from the build', async ({ page }) => {
+      const word = p.lang === 'en' ? 'Updated' : 'Diperbarui';
+      await expect(page.locator('footer')).toContainText(new RegExp(String.raw`${word} \p{L}+ 20\d\d`, 'u'));
+    });
+
+    test('compact bar appears after the hero and opens the download dialog', async ({ page }) => {
+      const bar = page.locator('.minibar');
+      await expect(bar).toBeHidden();
+      await page.locator('#experience').scrollIntoViewIfNeeded();
+      await expect(bar).toBeVisible();
+      const box = (await bar.boundingBox())!;
+      expect(box.y).toBe(0);
+      await bar.locator('.cv-open').click();
+      await expect(page.locator('#cv-dialog')).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(bar.locator('.cv-open')).toBeFocused();
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await expect(bar).toBeHidden();
+    });
+
+    test('sections sheet below 1200 px lists every section and jumps to one', async ({ page }) => {
+      const width = page.viewportSize()!.width;
+      await page.locator('#experience').scrollIntoViewIfNeeded();
+      const open = page.locator('.minibar .sheet-open');
+      if (width >= 1200) { await expect(open).toBeHidden(); return; }
+      await open.click();
+      const sheet = page.locator('#sections-sheet');
+      await expect(sheet).toBeVisible();
+      await expect(sheet.locator('a')).toHaveCount(11);
+      await sheet.locator('a[href="#skills"]').click();
+      await expect(sheet).toBeHidden();
+      await expect.poll(() => page.evaluate(() => Math.round(document.getElementById('skills')!.getBoundingClientRect().top))).toBeLessThan(120);
+    });
+
     test('theme button switches theme and remembers it', async ({ page }) => {
       const html = page.locator('html');
       await expect(html).not.toHaveAttribute('data-theme', /./);

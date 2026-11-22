@@ -215,17 +215,17 @@ export const nav = {
 // Short labels for the section menu on the right (wide screens only).
 export const rail = [
   { id: 'about', en: 'About', id_: 'Tentang' },
+  { id: 'achievements', en: 'Achievements', id_: 'Pencapaian' },
   { id: 'do', en: 'What I do', id_: 'Bidang' },
   { id: 'experience', en: 'Experience', id_: 'Pengalaman' },
   { id: 'work', en: 'Work', id_: 'Proyek' },
   { id: 'research', en: 'Research', id_: 'Riset' },
   { id: 'leadership', en: 'Leadership', id_: 'Kepemimpinan' },
-  { id: 'achievements', en: 'Achievements', id_: 'Pencapaian' },
   { id: 'certs', en: 'Certifications', id_: 'Sertifikasi' },
   { id: 'education', en: 'Education', id_: 'Pendidikan' },
   { id: 'skills', en: 'Skills', id_: 'Keahlian' },
   { id: 'contact', en: 'Contact', id_: 'Kontak' },
-];
+]
 
 export const ui2 = {
   seeWork: { en: 'See selected work', id: 'Lihat proyek pilihan' },
@@ -235,11 +235,56 @@ export const ui2 = {
   leadership: { en: 'Leadership', id: 'Kepemimpinan' },
   copy: { en: 'Copy', id: 'Salin' },
   copied: { en: 'Copied', id: 'Tersalin' },
-  updated: { en: 'Updated November 2026', id: 'Diperbarui November 2026' },
+  updated: { en: 'Updated', id: 'Diperbarui' },
+  stats: { en: 'At a glance', id: 'Sekilas' },
+  openSections: { en: 'Sections', id: 'Bagian' },
+  close: { en: 'Close', id: 'Tutup' },
   theme: { en: 'Theme', id: 'Tema' },
   download: { en: 'Download CV', id: 'Unduh CV' },
   switchLang: { en: 'Baca dalam Bahasa Indonesia', id: 'Read in English' },
   sections: { en: 'Sections', id: 'Bagian' },
   portraitAlt: { en: 'Rifki Hidayatullah smiling and holding up the grand finalist medal at the BRI GAMA IBCC 2026 Announcement of Champions in Jakarta', id: 'Rifki Hidayatullah tersenyum sambil mengangkat medali grand finalist di Announcement of Champions BRI GAMA IBCC 2026 di Jakarta' },
   toTop: { en: 'Back to top', id: 'Kembali ke atas' },
+};
+
+// Numbers in the hero. Values that come from the data (project and case study counts) are filled in Cv.astro.
+export const heroStats = {
+  years: { value: '3+', label: { en: 'years of software testing at PT Aero Systems Indonesia', id: 'tahun pengujian perangkat lunak di PT Aero Systems Indonesia' } },
+  systems: { label: { en: 'systems tested across aviation, travel, procurement and healthcare', id: 'sistem diuji di bidang penerbangan, perjalanan, pengadaan, dan kesehatan' } },
+  gama: { value: 'Top 10', label: { en: 'of 60+ graduate teams worldwide, BRI GAMA IBCC 2026', id: 'dari 60+ tim pascasarjana dunia, BRI GAMA IBCC 2026' } },
+  grc: { label: { en: 'IT GRC case studies with COBIT 2019, ISO/IEC 27001 and 27005, TOGAF and ITIL', id: 'studi kasus IT GRC dengan COBIT 2019, ISO/IEC 27001 dan 27005, TOGAF, dan ITIL' } },
+};
+
+// View switch: everything, or the QA or IT GRC angle. Also read from ?view= so a shared link opens in that view.
+export const views = [
+  { id: 'all', label: { en: 'All', id: 'Semua' } },
+  { id: 'qa', label: { en: 'QA', id: 'QA' } },
+  { id: 'grc', label: { en: 'IT GRC', id: 'IT GRC' } },
+] as const;
+
+export const ui3 = {
+  viewAs: { en: 'View as', id: 'Lihat sebagai' },
+  viewHint: {
+    en: 'QA hides the governance case studies. IT GRC moves research and case studies ahead of projects.',
+    id: 'QA menyembunyikan studi kasus tata kelola. IT GRC menaruh riset dan studi kasus sebelum proyek.',
+  },
+  moreProjects: { en: 'Show {n} more projects', id: 'Lihat {n} proyek lainnya' },
+  share: { en: 'Share', id: 'Bagikan' },
+  shareTitle: { en: 'Share to', id: 'Bagikan ke' },
+  shareText: {
+    en: 'Rifki Hidayatullah, QA / Software Test Engineer and IT GRC',
+    id: 'Rifki Hidayatullah, QA / Software Test Engineer dan IT GRC',
+  },
+  copyLink: { en: 'Copy link', id: 'Salin link' },
+  copied: { en: 'Copied', id: 'Tersalin' },
+  email: { en: 'Email', id: 'Email' },
+  qr: { en: 'QR code', id: 'Kode QR' },
+  more: { en: 'More', id: 'Lainnya' },
+  qrHint: { en: 'Scan to open this page on a phone.', id: 'Pindai untuk membuka halaman ini di ponsel.' },
+  linkLabel: { en: 'Link to share', id: 'Link untuk dibagikan' },
+  saveContact: { en: 'Save contact (vCard)', id: 'Simpan kontak (vCard)' },
+  contactCard: { en: 'Contact card', id: 'Kartu kontak' },
+  photo: { en: 'Photo', id: 'Foto' },
+  prev: { en: 'Previous photo', id: 'Foto sebelumnya' },
+  next: { en: 'Next photo', id: 'Foto berikutnya' },
 };

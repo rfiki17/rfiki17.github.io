@@ -1,0 +1,136 @@
+---
+// "Share to" dialog in the style of a short-video app: a row of round targets that scrolls sideways.
+// Opened by any element with class "share-open". The link is the current page plus ?view= when a
+// view other than "all" is active. The QR code is rendered at build time (no script, no request).
+import QRCode from 'qrcode';
+import { type Lang } from '../data/cv';
+import { ui3 } from '../data/v2';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = (x: { en: string; id: string }) => x[lang];
+const site = Astro.site ?? new URL('https://rfiki17.github.io');
+const pageUrl = new URL(lang === 'en' ? '/' : '/id/', site).href;
+const qrSvg = await QRCode.toString(pageUrl, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#0A0909', light: '#FFFFFF' } });
+
+// Brand-neutral glyphs drawn inline. Labels under each circle carry the meaning.
+const targets = [
+  { key: 'copy', label: t(ui3.copyLink), bg: '#2F6FDE', icon: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L11.6 6" /><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6" />' },
+  { key: 'whatsapp', label: 'WhatsApp', bg: '#1FAF5A', icon: '<path d="M4 20l1.3-3.9A8 8 0 1 1 8.2 19z" /><path d="M9.2 8.6c.3 2.6 2.4 4.9 5.2 5.6l1.1-1.2-1.6-.9-.8.7c-1-.4-2-1.4-2.4-2.4l.7-.8-.9-1.6z" fill="currentColor" stroke="none" />' },
+  { key: 'linkedin', label: 'LinkedIn', bg: '#0A66C2', icon: '<path d="M7 10v7M7 7v.01M11 17v-7M11 13.5c0-2 1-3.5 3-3.5s3 1.3 3 3.5V17" />' },
+  { key: 'telegram', label: 'Telegram', bg: '#1E96C8', icon: '<path d="M21 4 3 11l6 2 2 6 3-4 5 4z" /><path d="m9 13 8-6" />' },
+  { key: 'x', label: 'X', bg: '#0A0909', icon: '<path d="M5 4l14 16M19 4 5 20" />' },
+  { key: 'facebook', label: 'Facebook', bg: '#1668E3', icon: '<path d="M14 21v-7h2.5l.5-3H14V9.5c0-1 .4-1.5 1.5-1.5H17V5.2A16 16 0 0 0 14.8 5C12.6 5 11 6.4 11 8.9V11H8.5v3H11v7" />' },
+  { key: 'email', label: t(ui3.email), bg: '#5E3A30', icon: '<rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" />' },
+  { key: 'qr', label: t(ui3.qr), bg: '#4A4542', icon: '<rect x="4" y="4" width="6" height="6" /><rect x="14" y="4" width="6" height="6" /><rect x="4" y="14" width="6" height="6" /><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2" />' },
+  { key: 'native', label: t(ui3.more), bg: '#6F6A67', icon: '<circle cx="6" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="18" cy="12" r="1.4" fill="currentColor" />' },
+];
+---
+<dialog id="share-dialog" class="share" aria-labelledby="share-title"
+  data-text={t(ui3.shareText)} data-copied={t(ui3.copied)} data-copy={t(ui3.copyLink)}>
+  <div class="share-head">
+    <h2 id="share-title">{t(ui3.shareTitle)}</h2>
+    <button class="cvd-x tap share-close" type="button" aria-label={lang === 'en' ? 'Close' : 'Tutup'}>&times;</button>
+  </div>
+  <ul class="share-row" role="list">
+    {targets.map((x) => (
+      <li class={`share-item share-t-${x.key}`} data-key={x.key}>
+        {(x.key === 'copy' || x.key === 'qr' || x.key === 'native') ? (
+          <button class="share-btn" type="button" data-target={x.key} aria-pressed={x.key === 'qr' ? 'false' : undefined}>
+            <span class="share-dot" style={`background:${x.bg}`} aria-hidden="true"><svg viewBox="0 0 24 24" set:html={x.icon} /></span>
+            <span class="share-label">{x.label}</span>
+          </button>
+        ) : (
+          <a class="share-btn" data-target={x.key} href="#" target={x.key === 'email' ? undefined : '_blank'} rel="noopener">
+            <span class="share-dot" style={`background:${x.bg}`} aria-hidden="true"><svg viewBox="0 0 24 24" set:html={x.icon} /></span>
+            <span class="share-label">{x.label}</span>
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+  <div class="share-qr share-qr-panel" hidden>
+    <div class="share-qr-img" set:html={qrSvg} role="img" aria-label={`${t(ui3.qr)}: ${pageUrl}`} />
+    <p>{t(ui3.qrHint)}</p>
+  </div>
+  <label class="share-link">
+    <span>{t(ui3.linkLabel)}</span>
+    <input type="text" readonly value={pageUrl} data-base={pageUrl} />
+  </label>
+  <p class="share-status sr" role="status" aria-live="polite"></p>
+</dialog>
+
+<script is:inline>
+  (function () {
+    var dlg = document.getElementById('share-dialog');
+    if (!dlg || typeof dlg.showModal !== 'function') {
+      // No dialog support: hide the share buttons instead of leaving dead controls.
+      document.querySelectorAll('.share-open').forEach(function (b) { b.hidden = true; });
+      return;
+    }
+    var input = dlg.querySelector('.share-link input');
+    var status = dlg.querySelector('.share-status');
+    var qr = dlg.querySelector('.share-qr-panel');
+    var qrBtn = dlg.querySelector('[data-target="qr"]');
+    var copyLabel = dlg.querySelector('[data-target="copy"] .share-label');
+    var text = dlg.getAttribute('data-text');
+    var lastOpener = null;
+    if (!navigator.share) { var n = dlg.querySelector('.share-t-native'); if (n) n.hidden = true; }
+
+    function currentUrl() {
+      var url = new URL(input.getAttribute('data-base'));
+      var view = document.documentElement.getAttribute('data-view');
+      if (view && view !== 'all') url.searchParams.set('view', view);
+      return url.href;
+    }
+    function fill() {
+      var u = currentUrl(), e = encodeURIComponent;
+      input.value = u;
+      var hrefs = {
+        whatsapp: 'https://wa.me/?text=' + e(text + ' ' + u),
+        linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + e(u),
+        telegram: 'https://t.me/share/url?url=' + e(u) + '&text=' + e(text),
+        x: 'https://x.com/intent/tweet?text=' + e(text) + '&url=' + e(u),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + e(u),
+        email: 'mailto:?subject=' + e(text) + '&body=' + e(u),
+      };
+      Object.keys(hrefs).forEach(function (k) { var a = dlg.querySelector('a[data-target="' + k + '"]'); if (a) a.href = hrefs[k]; });
+    }
+    function say(msg) { status.textContent = ''; setTimeout(function () { status.textContent = msg; }, 30); }
+
+    document.querySelectorAll('.share-open').forEach(function (b) {
+      b.addEventListener('click', function () {
+        lastOpener = b; fill();
+        qr.hidden = true; qrBtn.setAttribute('aria-pressed', 'false');
+        dlg.showModal();
+      });
+    });
+    dlg.querySelector('.share-close').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { if (lastOpener) lastOpener.focus(); });
+
+    dlg.querySelector('[data-target="copy"]').addEventListener('click', function () {
+      var done = function () {
+        copyLabel.textContent = dlg.getAttribute('data-copied');
+        say(dlg.getAttribute('data-copied'));
+        setTimeout(function () { copyLabel.textContent = dlg.getAttribute('data-copy'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(input.value).then(done, function () { input.select(); });
+      } else { input.select(); }
+    });
+    qrBtn.addEventListener('click', function () {
+      var show = qr.hidden;
+      qr.hidden = !show;
+      qrBtn.setAttribute('aria-pressed', show ? 'true' : 'false');
+    });
+    var nat = dlg.querySelector('[data-target="native"]');
+    if (nat) nat.addEventListener('click', function () {
+      navigator.share({ title: document.title, text: text, url: input.value }).catch(function () {});
+    });
+    // Close after handing off to another app, so the page is clean when the visitor returns.
+    dlg.querySelectorAll('a[data-target]').forEach(function (a) {
+      a.addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 0); });
+    });
+  })();
+</script>
